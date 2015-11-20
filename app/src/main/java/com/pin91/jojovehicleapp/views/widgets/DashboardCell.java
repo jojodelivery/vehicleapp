@@ -58,6 +58,13 @@ public class DashboardCell extends RelativeLayout {
                     break;
                 case R.styleable.DashboardCell_cellBackground:
                     JojoUtils.setBackground(this, a.getDrawable(R.styleable.DashboardCell_cellBackground));
+                    break;
+                case R.styleable.DashboardCell_notificationTextColor:
+                    notificationCircle.setTextColor(a.getColor(R.styleable.DashboardCell_notificationTextColor, JojoUtils.getColor(getContext(), R.color.black)));
+                    break;
+                case R.styleable.DashboardCell_dashboardIconColor:
+                    dashboardIdentifier.setTextColor(a.getColor(R.styleable.DashboardCell_dashboardIconColor, JojoUtils.getColor(getContext(), R.color.black)));
+                    break;
             }
         }
         a.recycle();

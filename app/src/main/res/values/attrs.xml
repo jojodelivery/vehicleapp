@@ -5,5 +5,7 @@
         <attr name="dashboardFontSize" format="integer"></attr>
         <attr name="notificationTextSize" format="integer"></attr>
         <attr name="cellBackground" format="integer"></attr>
+        <attr name="notificationTextColor" format="integer"></attr>
+        <attr name="dashboardIconColor" format="integer"></attr>
     </declare-styleable>
 </resources>
