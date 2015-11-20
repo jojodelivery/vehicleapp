@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@color/colorPrimary"
+    android:weightSum="2"
+    android:layout_height="match_parent">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:weightSum="2"
+        android:layout_height="0dip">
+        <com.pin91.jojovehicleapp.views.widgets.DashboardCell
+            android:layout_height="match_parent"
+            custom:dashboardText="@string/purse"
+            android:id="@+id/basket_cell"
+            android:layout_width="0dip"
+            android:layout_margin="10dp"
+            custom:notificationTextSize="30"
+            custom:dashboardFontSize="80"
+            custom:cellBackground="@drawable/rounded_corner_rectangle"
+            android:layout_weight="1"
+            />
+        <com.pin91.jojovehicleapp.views.widgets.DashboardCell
+            android:layout_height="match_parent"
+            android:id="@+id/ware_house_cell"
+            android:layout_margin="10dp"
+            custom:dashboardText="@string/ware_house"
+            custom:cellBackground="@drawable/rounded_corner_rectangle"
+            android:layout_width="0dip"
+            custom:notificationTextSize="30"
+            custom:dashboardFontSize="80"
+            android:layout_weight="1"
+            />
+    </TableRow>
+
+    <TableRow
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:weightSum="2"
+        android:layout_height="0dip">
+        <com.pin91.jojovehicleapp.views.widgets.DashboardCell
+            custom:cellBackground="@drawable/rounded_corner_rectangle"
+            android:layout_height="match_parent"
+            android:layout_width="0dip"
+            custom:dashboardFontSize="80"
+            android:layout_margin="10dp"
+            custom:dashboardText="@string/hand_over"
+            custom:notificationTextSize="30"
+            android:id="@+id/transit_vehicle_cell"
+            android:layout_weight="1"
+            />
+        <com.pin91.jojovehicleapp.views.widgets.DashboardCell
+            android:layout_height="match_parent"
+            android:layout_width="0dip"
+            android:layout_margin="10dp"
+            custom:cellBackground="@drawable/rounded_corner_rectangle"
+            custom:dashboardText="@string/transit_vehicle"
+            android:id="@+id/hand_over_cell"
+            custom:dashboardFontSize="80"
+            custom:notificationTextSize="30"
+            android:layout_weight="1"
+            />
+    </TableRow>
+
+</TableLayout>

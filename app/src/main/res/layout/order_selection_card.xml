@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <include
+            android:id="@+id/order_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/order"></include>
+        <include
+            android:id="@+id/right_wrong_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/order_view"
+            layout="@layout/right_wrong"></include>
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

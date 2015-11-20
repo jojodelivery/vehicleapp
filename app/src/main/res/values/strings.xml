@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">JojoVehicleApp</string>
+    <string name="ware_house">&#xe004;</string>
+    <string name="hand_over">&#xe003;</string>
+    <string name="basket">&#xe000;</string>
+    <string name="transit_vehicle">&#xe001;</string>
+    <string name="left_arrow">&#xe005;</string>
+    <string name="right_arrow">&#xe008;</string>
+    <string name="location_icon">&#xe006;</string>
+    <string name="right_icon">&#xe008;</string>
+    <string name="wrong_icon">&#xe00a;</string>
+    <string name="purse">&#xe007;</string>
+</resources>

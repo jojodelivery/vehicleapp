@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DashboardCell">
+        <attr name="dashboardText" format="string"></attr>
+        <attr name="dashboardFontSize" format="integer"></attr>
+        <attr name="notificationTextSize" format="integer"></attr>
+        <attr name="cellBackground" format="integer"></attr>
+    </declare-styleable>
+</resources>
