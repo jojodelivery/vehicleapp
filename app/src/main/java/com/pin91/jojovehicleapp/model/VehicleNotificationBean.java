@@ -1,8 +1,10 @@
 package com.pin91.jojovehicleapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Date;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VehicleNotificationBean {

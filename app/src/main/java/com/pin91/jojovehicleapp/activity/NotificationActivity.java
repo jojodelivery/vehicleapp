@@ -34,9 +34,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pin91.jojodelivery.R;
-import com.pin91.jojodelivery.model.VehicleNotificationBean;
-import com.pin91.jojodelivery.util.ConnectionUtil;
+import com.pin91.jojovehicleapp.R;
+import com.pin91.jojovehicleapp.model.VehicleNotificationBean;
+import com.pin91.jojovehicleapp.network.ConnectionUtil;
+
 
 public class NotificationActivity extends Activity {
 	List<VehicleNotificationBean> finalNotificationList = new ArrayList<VehicleNotificationBean>();
@@ -230,10 +231,10 @@ public class NotificationActivity extends Activity {
 				// add name value pair for the country code
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
 						2);
-				nameValuePairs.add(new BasicNameValuePair("vehicleId", LandingScreenActivity.sharedpreferences.getString("vehicleId",
+				nameValuePairs.add(new BasicNameValuePair("vehicleId", HomeActivity.sharedpreferences.getString("vehicleId",
 						"")));
 				nameValuePairs.add(new BasicNameValuePair("userId",
-						LandingScreenActivity.sharedpreferences.getString("userId",
+						HomeActivity.sharedpreferences.getString("userId",
 								"")));
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 				HttpResponse response = httpclient.execute(httpPost);

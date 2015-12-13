@@ -1,23 +1,5 @@
 package com.pin91.jojovehicleapp.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.params.ConnManagerParams;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -34,9 +16,29 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pin91.jojodelivery.R;
-import com.pin91.jojodelivery.model.PacketTrackingBean;
-import com.pin91.jojodelivery.util.ConnectionUtil;
+import com.pin91.jojovehicleapp.R;
+import com.pin91.jojovehicleapp.model.PacketTrackingBean;
+import com.pin91.jojovehicleapp.network.ConnectionUtil;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
 
 public class DropActivity extends Activity {
 	List<PacketTrackingBean> finalNotificationList = new ArrayList<PacketTrackingBean>();
@@ -230,12 +232,12 @@ public class DropActivity extends Activity {
 				// add name value pair for the country code
 				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
 						2);
-				nameValuePairs.add(new BasicNameValuePair("vehicleId", LandingScreenActivity.sharedpreferences.getString("vehicleId",
+				nameValuePairs.add(new BasicNameValuePair("vehicleId", HomeActivity.sharedpreferences.getString("vehicleId",
 						"")));
 				nameValuePairs.add(new BasicNameValuePair("status",
 						"IN_TRANSIT"));
 				nameValuePairs.add(new BasicNameValuePair("userId",
-						LandingScreenActivity.sharedpreferences.getString("userId",
+						HomeActivity.sharedpreferences.getString("userId",
 								"")));
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 				HttpResponse response = httpclient.execute(httpPost);

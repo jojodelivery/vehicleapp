@@ -44,6 +44,22 @@
             android:name=".activity.MessageActivity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".activity.NotificationActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.DropActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.PickUpActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".activity.AllocatedPacketActivity"
+            android:screenOrientation="portrait" >
+        </activity>
         <service
             android:name=".service.MessageReceivingService"
             android:label=".service.MessageReceivingService" >
