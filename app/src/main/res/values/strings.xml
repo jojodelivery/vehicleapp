@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Jojo App</string>
+    <string name="app_name">Jojo Vehicle App</string>
     <string name="ware_house">&#xe004;</string>
     <string name="hand_over">&#xe003;</string>
     <string name="basket">&#xe000;</string>
@@ -10,4 +10,13 @@
     <string name="right_icon">&#xe008;</string>
     <string name="wrong_icon">&#xe00a;</string>
     <string name="purse">&#xe007;</string>
+    <string name="userName">User Name</string>
+    <string name="password">Password</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="forget_password_text">Please enter your email id</string>
+    <string name="forgot_password_heading">Forgot Password</string>
+    <string name="submit">Submit</string>
+    <string name="action_settings">Notifications</string>
+    <string name="stop">Stop</string>
 </resources>
