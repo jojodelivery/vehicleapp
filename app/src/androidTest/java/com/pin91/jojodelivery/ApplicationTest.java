@@ -1,4 +1,4 @@
-package com.pin91.jojovehicleapp;
+package com.pin91.jojodelivery;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

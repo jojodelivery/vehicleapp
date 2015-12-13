@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.pin91.jojovehicleapp.utils;
+package com.pin91.jojodelivery.utils;
 
 import java.text.DateFormat;
 import java.text.ParseException;

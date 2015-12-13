@@ -1,4 +1,4 @@
-package com.pin91.jojovehicleapp.utils;
+package com.pin91.jojodelivery.utils;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

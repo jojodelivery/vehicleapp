@@ -1,4 +1,4 @@
-package com.pin91.jojovehicleapp.model;
+package com.pin91.jojodelivery.model;
 
 import java.util.Date;
 

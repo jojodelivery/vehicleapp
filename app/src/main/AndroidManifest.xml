@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.pin91.jojovehicleapp" >
+    package="com.pin91.jojodelivery" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -23,7 +23,7 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <activity android:name=".activity.JojoDeliveryActivity"
+        <activity android:name="com.pin91.jojodelivery.activity.JojoDeliveryActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -33,19 +33,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.LoginActivity"
+            android:name="com.pin91.jojodelivery.activity.LoginActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.HomeActivity"
+            android:name="com.pin91.jojodelivery.activity.HomeActivity"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.MessageActivity"
+            android:name="com.pin91.jojodelivery.activity.MessageActivity"
             android:screenOrientation="portrait" >
         </activity>
         <service
-            android:name=".service.MessageReceivingService"
+            android:name="com.pin91.jojodelivery.service.MessageReceivingService"
             android:label=".service.MessageReceivingService" >
             <intent-filter>
                 <action android:name=".activity.MessageActivity" />
@@ -54,7 +54,7 @@
         </service>
 
         <receiver
-            android:name=".receiver.ExternalReceiver"
+            android:name="com.pin91.jojodelivery.receiver.ExternalReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />

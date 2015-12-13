@@ -19,4 +19,7 @@
     <string name="submit">Submit</string>
     <string name="action_settings">Notifications</string>
     <string name="stop">Stop</string>
+    <string name="next_text">Next</string>
+    <string name="prev_text">Previous</string>
+    <string name="notification_no">Notification</string>
 </resources>

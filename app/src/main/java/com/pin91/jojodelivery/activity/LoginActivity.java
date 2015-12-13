@@ -1,4 +1,4 @@
-package com.pin91.jojovehicleapp.activity;
+package com.pin91.jojodelivery.activity;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,12 +34,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 
-import com.pin91.jojovehicleapp.R;
-import com.pin91.jojovehicleapp.model.LoginDO;
-import com.pin91.jojovehicleapp.model.User;
-import com.pin91.jojovehicleapp.network.ConnectionUtil;
-import com.pin91.jojovehicleapp.utils.DTSCommonUtil;
-import com.pin91.jojovehicleapp.utils.MySQLiteHelper;
+import com.pin91.jojodelivery.R;
+import com.pin91.jojodelivery.model.LoginDO;
+import com.pin91.jojodelivery.model.User;
+import com.pin91.jojodelivery.network.ConnectionUtil;
+import com.pin91.jojodelivery.utils.DTSCommonUtil;
+import com.pin91.jojodelivery.utils.MySQLiteHelper;
 
 
 public class LoginActivity extends Activity {

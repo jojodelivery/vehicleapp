@@ -1,4 +1,4 @@
-package com.pin91.jojovehicleapp.activity;
+package com.pin91.jojodelivery.activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.pin91.jojovehicleapp.R;
+import com.pin91.jojodelivery.R;
 
 
 public class MessageActivity extends Activity {

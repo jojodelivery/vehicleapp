@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.pin91.jojovehicleapp.model;
+package com.pin91.jojodelivery.model;
 
 /**
  * @author Debdutta Bhattacharya

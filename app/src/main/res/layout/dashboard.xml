@@ -11,7 +11,7 @@
         android:layout_weight="1"
         android:weightSum="2"
         android:layout_height="0dip">
-        <com.pin91.jojovehicleapp.views.widgets.DashboardCell
+        <com.pin91.jojodelivery.views.widgets.DashboardCell
             android:layout_height="match_parent"
             custom:dashboardText="@string/purse"
             android:id="@+id/basket_cell"
@@ -22,7 +22,7 @@
             custom:cellBackground="@drawable/rounded_corner_rectangle"
             android:layout_weight="1"
             />
-        <com.pin91.jojovehicleapp.views.widgets.DashboardCell
+        <com.pin91.jojodelivery.views.widgets.DashboardCell
             android:layout_height="match_parent"
             android:id="@+id/ware_house_cell"
             android:layout_margin="10dp"
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:weightSum="2"
         android:layout_height="0dip">
-        <com.pin91.jojovehicleapp.views.widgets.DashboardCell
+        <com.pin91.jojodelivery.views.widgets.DashboardCell
             custom:cellBackground="@drawable/rounded_corner_rectangle"
             android:layout_height="match_parent"
             android:layout_width="0dip"
@@ -51,7 +51,7 @@
             android:id="@+id/transit_vehicle_cell"
             android:layout_weight="1"
             />
-        <com.pin91.jojovehicleapp.views.widgets.DashboardCell
+        <com.pin91.jojodelivery.views.widgets.DashboardCell
             android:layout_height="match_parent"
             android:layout_width="0dip"
             android:layout_margin="10dp"

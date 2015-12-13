@@ -1,4 +1,4 @@
-package com.pin91.jojovehicleapp.activity;
+package com.pin91.jojodelivery.activity;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,7 +25,7 @@ import com.pin91.jojodelivery.model.PacketTrackingBean;
 import com.pin91.jojodelivery.util.ConnectionUtil;
 import com.pin91.jojodelivery.util.DTSCommonUtil;
 
-public class PickUpActivity extends Activity {
+public class AllocatedPacketActivity extends Activity {
 
 	TextView textView;
 	ImageView acceptBtn;
@@ -40,8 +40,8 @@ public class PickUpActivity extends Activity {
 
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-		setContentView(R.layout.pickup);
-		mContext = PickUpActivity.this;
+		setContentView(R.layout.allocated_packet_list);
+		mContext = AllocatedPacketActivity.this;
 		textView = (TextView) findViewById(R.id.pickupMessage);
 		acceptBtn = (ImageView) findViewById(R.id.acceptBtn);
 		rejectBtn = (ImageView) findViewById(R.id.rejectBtn);
@@ -56,17 +56,17 @@ public class PickUpActivity extends Activity {
 	public void acceptClick(View view) {
 		Map<String, String> paramsMap = new HashMap<String, String>();
 		paramsMap.put("packetTrackingId",""+packetTrackingId);
-		paramsMap.put("status", "IN_TRANSIT");
+		paramsMap.put("status", "ACCEPT");
 		paramsMap.put("packetId", ""+packetId);
 		paramsMap.put("userId",LandingScreenActivity.sharedpreferences.getString("userId",
 				""));
 		ConnectionUtil.connectToBackEnd(paramsMap,
 				"app/updateVehiclePickUp");
 		AlertDialog.Builder builder = new AlertDialog.Builder(
-				PickUpActivity.this);
+				AllocatedPacketActivity.this);
 		builder.setTitle("Alert");
 		builder.setMessage(
-				"Data has been saved.")
+				"You have accepted the packet.")
 				.setCancelable(false)
 				.setPositiveButton(
 						"OK",
@@ -92,7 +92,7 @@ public class PickUpActivity extends Activity {
 		ConnectionUtil.connectToBackEnd(paramsMap,
 				"app/updateVehiclePickUp");
 		AlertDialog.Builder builder = new AlertDialog.Builder(
-				PickUpActivity.this);
+				AllocatedPacketActivity.this);
 		builder.setTitle("Alert");
 		builder.setMessage(
 				"You have rejected the packet.")
@@ -117,7 +117,7 @@ public class PickUpActivity extends Activity {
 			acceptBtn.setVisibility(View.GONE);
 			rejectBtn.setVisibility(View.GONE);
 			if (ConnectionUtil.NO_INTERNET_MESSAGE_SHOWN == "false")
-				Toast.makeText(PickUpActivity.this,
+				Toast.makeText(AllocatedPacketActivity.this,
 						ConnectionUtil.CONNECTION_SERVER_DOWN_MESSAGE,
 						Toast.LENGTH_LONG).show();
 			return;
@@ -129,7 +129,7 @@ public class PickUpActivity extends Activity {
 		paramsMap.put("userId",LandingScreenActivity.sharedpreferences.getString("userId",
 						""));
 		String response = ConnectionUtil.connectToBackEnd(paramsMap,
-				"app/getPickupDetailsByVehicleId");
+				"app/getAllocatedPacketByVehicleId");
 
 		if (response == null || response == "") {
 			textView.setText(R.string.empty_display);

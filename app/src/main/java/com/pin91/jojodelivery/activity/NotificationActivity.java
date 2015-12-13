@@ -1,4 +1,4 @@
-package com.pin91.jojovehicleapp.activity;
+package com.pin91.jojodelivery.activity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +35,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pin91.jojodelivery.R;
-import com.pin91.jojodelivery.model.PacketTrackingBean;
+import com.pin91.jojodelivery.model.VehicleNotificationBean;
 import com.pin91.jojodelivery.util.ConnectionUtil;
 
-public class DropActivity extends Activity {
-	List<PacketTrackingBean> finalNotificationList = new ArrayList<PacketTrackingBean>();
+public class NotificationActivity extends Activity {
+	List<VehicleNotificationBean> finalNotificationList = new ArrayList<VehicleNotificationBean>();
 	Button prevBtn;
 	Button nextBtn;
 	TextView notificationMessage;
@@ -57,21 +57,21 @@ public class DropActivity extends Activity {
 
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-		setContentView(R.layout.drop);
-		mContext = DropActivity.this;
+		setContentView(R.layout.notification);
+		mContext = NotificationActivity.this;
 		notificationMessage = (TextView) findViewById(R.id.notificationMessage);
 		prevBtn = (Button) findViewById(R.id.prevButtonId);
 		nextBtn = (Button) findViewById(R.id.nextButtonId);
 		dropNotificationSpinner = (Spinner) findViewById(R.id.notificationId);
 		
 		dataAdapter = new ArrayAdapter<String>(
-				DropActivity.this,
+				NotificationActivity.this,
 				android.R.layout.simple_spinner_item, spinnerList);
 		dataAdapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		dropNotificationSpinner.setAdapter(dataAdapter);
 		addListener();
-		(new DropActivityViewLoader()).execute();
+		(new NotificationActivityViewLoader()).execute();
 	}
 
 	public void prevClick(View view) {
@@ -133,8 +133,8 @@ public class DropActivity extends Activity {
 	}
 	
 	public void createNotificationMessage(){
-		PacketTrackingBean packetTrackingBean=finalNotificationList.get(currentNotificationNumber-1); 
-		notificationMessage.setText(packetTrackingBean.getMessage());
+		VehicleNotificationBean vehicleNotificationBean=finalNotificationList.get(currentNotificationNumber-1); 
+		notificationMessage.setText(vehicleNotificationBean.getMessage());
 	}
 	
 	public void nextClick(View view) {
@@ -159,13 +159,13 @@ public class DropActivity extends Activity {
 
 	}
 
-	private class DropActivityViewLoader extends
-			AsyncTask<String, Void, List<PacketTrackingBean>> {
+	private class NotificationActivityViewLoader extends
+			AsyncTask<String, Void, List<VehicleNotificationBean>> {
 		private final ProgressDialog dialog = new ProgressDialog(mContext);
 		boolean isErrorOccured = false;
 
 		@Override
-		protected void onPostExecute(List<PacketTrackingBean> result) {
+		protected void onPostExecute(List<VehicleNotificationBean> result) {
 			prevBtn.setVisibility(View.VISIBLE);
 			nextBtn.setVisibility(View.VISIBLE);
 			dropNotificationSpinner.setVisibility(View.VISIBLE);
@@ -186,11 +186,11 @@ public class DropActivity extends Activity {
 			if (isErrorOccured) {
 				if (!ConnectionUtil.isNetworkAvailable())
 					Toast.makeText(
-							DropActivity.mContext,
+							NotificationActivity.mContext,
 							"Check Your Internet Connection",
 							Toast.LENGTH_LONG).show();
 				else
-					Toast.makeText(DropActivity.mContext,
+					Toast.makeText(NotificationActivity.mContext,
 							ConnectionUtil.CONNECTION_SERVER_DOWN_MESSAGE,
 							Toast.LENGTH_LONG).show();
 			} else if (finalNotificationList.size() == 0) {
@@ -210,9 +210,9 @@ public class DropActivity extends Activity {
 		}
 
 		@Override
-		protected List<PacketTrackingBean> doInBackground(String... params) {
+		protected List<VehicleNotificationBean> doInBackground(String... params) {
 			isErrorOccured = false;
-			List<PacketTrackingBean> result = new ArrayList<PacketTrackingBean>();
+			List<VehicleNotificationBean> result = new ArrayList<VehicleNotificationBean>();
 			final int REGISTRATION_TIMEOUT = 3 * 1000;
 			final int WAIT_TIMEOUT = 30 * 1000;
 			try {
@@ -224,7 +224,7 @@ public class DropActivity extends Activity {
 				HttpConnectionParams.setSoTimeout(httpParam, WAIT_TIMEOUT);
 				ConnManagerParams.setTimeout(httpParam, WAIT_TIMEOUT);
 				String url = ConnectionUtil.CONNECTION_BACKEND
-						+ "app/getVehcilePacketList";
+						+ "app/getVehicleNotificationByVehicleId";
 				HttpPost httpPost = new HttpPost(url);
 
 				// add name value pair for the country code
@@ -232,8 +232,6 @@ public class DropActivity extends Activity {
 						2);
 				nameValuePairs.add(new BasicNameValuePair("vehicleId", LandingScreenActivity.sharedpreferences.getString("vehicleId",
 						"")));
-				nameValuePairs.add(new BasicNameValuePair("status",
-						"IN_TRANSIT"));
 				nameValuePairs.add(new BasicNameValuePair("userId",
 						LandingScreenActivity.sharedpreferences.getString("userId",
 								"")));
@@ -249,19 +247,11 @@ public class DropActivity extends Activity {
 					if (jarray != null && jarray.length() > 0) {
 						for (int i = 0; i < jarray.length(); i++) {
 							JSONObject object = jarray.getJSONObject(i);
-							PacketTrackingBean packetTrackingBean = new PacketTrackingBean();
-							packetTrackingBean.setCreatedDate(object
-									.getString("createdDate"));
-							packetTrackingBean.setMessage(object
+							VehicleNotificationBean vehicleNotificationBean = new VehicleNotificationBean();
+							vehicleNotificationBean.setMessage(object
 									.getString("message"));
-							packetTrackingBean.setPacketName(object
-									.getString("packetName"));
-							packetTrackingBean.setPacketTrackingId(object
-									.getInt("packetTrackingId"));
-							packetTrackingBean.setStatus(object
-									.getString("status"));
-
-							result.add(packetTrackingBean);
+							
+							result.add(vehicleNotificationBean);
 						}
 					}
 				}

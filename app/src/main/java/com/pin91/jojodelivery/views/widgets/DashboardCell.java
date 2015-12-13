@@ -1,17 +1,16 @@
-package com.pin91.jojovehicleapp.views.widgets;
+package com.pin91.jojodelivery.views.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.pin91.jojovehicleapp.R;
-import com.pin91.jojovehicleapp.utils.JojoUtils;
+import com.pin91.jojodelivery.R;
+import com.pin91.jojodelivery.utils.JojoUtils;
 
 
 /**

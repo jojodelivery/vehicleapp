@@ -1,4 +1,4 @@
-package com.pin91.jojovehicleapp.network;
+package com.pin91.jojodelivery.network;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.pin91.jojovehicleapp.activity.LoginActivity;
+import com.pin91.jojodelivery.activity.LoginActivity;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;

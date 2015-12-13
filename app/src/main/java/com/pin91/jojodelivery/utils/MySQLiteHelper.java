@@ -1,11 +1,11 @@
-package com.pin91.jojovehicleapp.utils;
+package com.pin91.jojodelivery.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.pin91.jojovehicleapp.model.User;
+import com.pin91.jojodelivery.model.User;
 
 /**
  * @author Debdutta Bhattacharya

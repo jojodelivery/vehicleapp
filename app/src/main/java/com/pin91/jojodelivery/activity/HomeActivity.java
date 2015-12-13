@@ -1,9 +1,9 @@
-package com.pin91.jojovehicleapp.activity;
+package com.pin91.jojodelivery.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.pin91.jojovehicleapp.R;
+import com.pin91.jojodelivery.R;
 
 public class HomeActivity extends AppCompatActivity {
 
