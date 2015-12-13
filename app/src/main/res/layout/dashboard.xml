@@ -14,7 +14,7 @@
         <com.pin91.jojovehicleapp.views.widgets.DashboardCell
             android:layout_height="match_parent"
             custom:dashboardText="@string/purse"
-            android:id="@+id/basket_cell"
+            android:id="@+id/allocated_packet"
             android:layout_width="0dip"
             android:layout_margin="10dp"
             custom:notificationTextSize="30"
@@ -24,7 +24,7 @@
             />
         <com.pin91.jojovehicleapp.views.widgets.DashboardCell
             android:layout_height="match_parent"
-            android:id="@+id/ware_house_cell"
+            android:id="@+id/notification"
             android:layout_margin="10dp"
             custom:dashboardText="@string/ware_house"
             custom:cellBackground="@drawable/rounded_corner_rectangle"
@@ -48,7 +48,7 @@
             android:layout_margin="10dp"
             custom:dashboardText="@string/hand_over"
             custom:notificationTextSize="30"
-            android:id="@+id/transit_vehicle_cell"
+            android:id="@+id/pickup"
             android:layout_weight="1"
             />
         <com.pin91.jojovehicleapp.views.widgets.DashboardCell
@@ -57,7 +57,7 @@
             android:layout_margin="10dp"
             custom:cellBackground="@drawable/rounded_corner_rectangle"
             custom:dashboardText="@string/transit_vehicle"
-            android:id="@+id/hand_over_cell"
+            android:id="@+id/drop_in_transit"
             custom:dashboardFontSize="80"
             custom:notificationTextSize="30"
             android:layout_weight="1"

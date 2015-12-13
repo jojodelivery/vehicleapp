@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
+
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,10 +18,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pin91.jojodelivery.R;
-import com.pin91.jojodelivery.model.PacketTrackingBean;
-import com.pin91.jojodelivery.util.ConnectionUtil;
-import com.pin91.jojodelivery.util.DTSCommonUtil;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pin91.jojovehicleapp.R;
+import com.pin91.jojovehicleapp.model.PacketTrackingBean;
+import com.pin91.jojovehicleapp.network.ConnectionUtil;
+import com.pin91.jojovehicleapp.utils.DTSCommonUtil;
+
 
 public class AllocatedPacketActivity extends Activity {
 
@@ -58,7 +60,7 @@ public class AllocatedPacketActivity extends Activity {
 		paramsMap.put("packetTrackingId",""+packetTrackingId);
 		paramsMap.put("status", "ACCEPT");
 		paramsMap.put("packetId", ""+packetId);
-		paramsMap.put("userId",LandingScreenActivity.sharedpreferences.getString("userId",
+		paramsMap.put("userId",HomeActivity.sharedpreferences.getString("userId",
 				""));
 		ConnectionUtil.connectToBackEnd(paramsMap,
 				"app/updateVehiclePickUp");
@@ -87,7 +89,7 @@ public class AllocatedPacketActivity extends Activity {
 		paramsMap.put("packetTrackingId",""+packetTrackingId);
 		paramsMap.put("status", "REJECT");
 		paramsMap.put("packetId", ""+packetId);
-		paramsMap.put("userId",LandingScreenActivity.sharedpreferences.getString("userId",
+		paramsMap.put("userId",HomeActivity.sharedpreferences.getString("userId",
 				""));
 		ConnectionUtil.connectToBackEnd(paramsMap,
 				"app/updateVehiclePickUp");
@@ -124,10 +126,10 @@ public class AllocatedPacketActivity extends Activity {
 		}
 		Map<String, String> paramsMap = new HashMap<String, String>();
 
-		paramsMap.put("vehicleId", LandingScreenActivity.sharedpreferences.getString("vehicleId",
+		paramsMap.put("vehicleId", HomeActivity.sharedpreferences.getString("vehicleId",
 				""));
-		paramsMap.put("userId",LandingScreenActivity.sharedpreferences.getString("userId",
-						""));
+		paramsMap.put("userId", HomeActivity.sharedpreferences.getString("userId",
+				""));
 		String response = ConnectionUtil.connectToBackEnd(paramsMap,
 				"app/getAllocatedPacketByVehicleId");
 

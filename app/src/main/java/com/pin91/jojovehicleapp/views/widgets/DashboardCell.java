@@ -94,7 +94,7 @@ public class DashboardCell extends RelativeLayout {
       //  JojoUtils.setBackground(notificationCircle, R.drawable.circular_text_view);
         notificationCircle.setTypeface(null, Typeface.BOLD);
         notificationCircle.setTextColor(JojoUtils.getColor(getContext(), R.color.dashboard_cell_circle_boundary));
-        setNotificationCircleText(12);
+        setNotificationCircleText(1);
         setNotificationCirclePadding(1);
         addView(notificationCircle);
     }
