@@ -2,6 +2,7 @@ package com.pin91.jojovehicleapp.views.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -63,7 +64,7 @@ public class DashboardCell extends RelativeLayout {
                     notificationCircle.setTextColor(a.getColor(R.styleable.DashboardCell_notificationTextColor, JojoUtils.getColor(getContext(), R.color.black)));
                     break;
                 case R.styleable.DashboardCell_dashboardIconColor:
-                    dashboardIdentifier.setTextColor(a.getColor(R.styleable.DashboardCell_dashboardIconColor, JojoUtils.getColor(getContext(), R.color.black)));
+                    dashboardIdentifier.setTextColor(a.getColor(R.styleable.DashboardCell_dashboardIconColor, JojoUtils.getColor(getContext(), Color.parseColor("#ffffff"))));
                     break;
             }
         }

@@ -3,6 +3,7 @@ package com.pin91.jojovehicleapp.utils;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.text.Editable;
 import android.view.View;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -65,5 +66,19 @@ public class JojoUtils {
                 return result;
             }
         }
+    }
+
+    public static boolean isNullOrEmpty(String string){
+        return string == null || string.trim().length() == 0;
+    }
+
+    public static String getStringFromEditable(Editable editable){
+        if(editable != null){
+            if(!JojoUtils.isNullOrEmpty(editable.toString())){
+                return editable.toString().trim();
+            }
+            return null;
+        }
+        return null;
     }
 }

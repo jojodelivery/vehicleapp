@@ -32,8 +32,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard);
-        sharedpreferences = getSharedPreferences("user_pref",
-                Context.MODE_PRIVATE);
         loadVehicleData();
 
         RelativeLayout notification = (RelativeLayout) findViewById(R.id.notification);
@@ -109,8 +107,7 @@ public class HomeActivity extends AppCompatActivity {
         if (response == null || response == "") {
             DTSCommonUtil.closeProgressBar();
             if (ConnectionUtil.NO_INTERNET_MESSAGE_SHOWN == "false")
-                Toast.makeText(
-                        HomeActivity.this,
+                Toast.makeText(HomeActivity.this,
                         ConnectionUtil.CONNECTION_SERVER_DOWN_MESSAGE,
                         Toast.LENGTH_LONG).show();
             return;

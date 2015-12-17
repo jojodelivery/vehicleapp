@@ -1,12 +1,5 @@
 package com.pin91.jojovehicleapp.activity;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -15,10 +8,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -28,380 +20,270 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-
 import com.pin91.jojovehicleapp.R;
 import com.pin91.jojovehicleapp.model.LoginDO;
 import com.pin91.jojovehicleapp.model.User;
 import com.pin91.jojovehicleapp.network.ConnectionUtil;
+import com.pin91.jojovehicleapp.network.ErrorMessages;
+import com.pin91.jojovehicleapp.network.requests.LoginRequest;
 import com.pin91.jojovehicleapp.utils.DTSCommonUtil;
+import com.pin91.jojovehicleapp.utils.JojoUtils;
 import com.pin91.jojovehicleapp.utils.MySQLiteHelper;
+import com.pin91.jojovehicleapp.utils.SharedPreferenceManager;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class LoginActivity extends Activity {
-	
-	GoogleCloudMessaging gcm;
-	public static Context mContext = null;
-	public static Integer userId;
-	private MySQLiteHelper mySQLiteHelper = null;
-	SharedPreferences sharedpreferences = null;
-	private User user;
-	boolean superBackPressed = false;
-	String regId;
 
-	public static final String REG_ID = "regId";
-	private static final String APP_VERSION = "appVersion";
+    GoogleCloudMessaging gcm;
+    public static Context mContext = null;
+    public static Integer userId;
+    SharedPreferences sharedpreferences = null;
+    private User user;
+    boolean superBackPressed = false;
+    String regId;
 
-	static final String TAG = "Register Activity";
-	
-	@Override
-	@SuppressLint("NewApi")
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		mContext = LoginActivity.this;
-		ConnectionUtil.context = LoginActivity.this;
-		superBackPressed = false;
+    public static final String REG_ID = "regId";
+    private static final String APP_VERSION = "appVersion";
 
-		if (Build.VERSION.SDK_INT >= 9) {
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-					.permitAll().build();
-			StrictMode.setThreadPolicy(policy);
-		}
+    static final String TAG = "Register Activity";
 
-		File database = getApplicationContext().getDatabasePath(
-				"databasename.db");
+    @Override
+    @SuppressLint("NewApi")
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mContext = LoginActivity.this;
+        ConnectionUtil.context = LoginActivity.this;
+        superBackPressed = false;
 
-		if (!database.exists()) {
-			mySQLiteHelper = new MySQLiteHelper(getApplicationContext());
-		} else {
+        // Version check for > 9 is removed as min API supported
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                .permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        user = MySQLiteHelper.fetchUser(getApplicationContext());
+        sharedpreferences = getSharedPreferences("user_pref",
+                Context.MODE_PRIVATE);
+        if (user != null) {
+            if (ConnectionUtil.isNetworkAvailable()) {
+                autoLogin();
+            } else {
+                setContentView(R.layout.login);
+                addListener();
+                setUserCredentials();
+                Toast.makeText(LoginActivity.mContext, ErrorMessages.UNABLE_TO_CONNECT, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            setContentView(R.layout.login);
+            addListener();
+        }
+    }
 
-		}
+    public void login(View view) {
+        DTSCommonUtil.showProgressBar(LoginActivity.this);
+        View inputView = this.getCurrentFocus();
+        if (inputView != null) {
+            InputMethodManager inputManager = (InputMethodManager) this
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(inputView.getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+        }
 
-		user = MySQLiteHelper.fetchUser(getApplicationContext());
+        if (isUserInputValid()) {
+            new AsyncTask<Void, LoginDO, LoginDO>() {
 
-		sharedpreferences = getSharedPreferences("user_pref",
-				Context.MODE_PRIVATE);
-		if (user != null) {
+                @Override
+                protected LoginDO doInBackground(Void... params) {
+                    return LoginRequest.loginUser(getApplicationContext(), getUserNameText().trim(), getPasswordText().trim());
+                }
 
-			if (ConnectionUtil.isNetworkAvailable()) {
-				// new HttpAsyncTask().execute("");
-				autoLogin1();
-			} else {
-				setContentView(R.layout.login);
-				addListener();
-				if (Build.VERSION.SDK_INT >= 9) {
-					StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-							.permitAll().build();
-					StrictMode.setThreadPolicy(policy);
-				}
+                @Override
+                protected void onPostExecute(LoginDO loginDO) {
+                    if (loginDO != null) {
+                        DTSCommonUtil.closeProgressBar();
+                        userId = loginDO.getUserId();
+                        User user = new User();
+                        user.setUserName(getUserNameText());
+                        user.setPassword(getPasswordText());
+                        MySQLiteHelper.insertUser(user, getApplicationContext());
+                        SharedPreferenceManager preferenceManager = SharedPreferenceManager.getSharedPreferenceManager(getApplicationContext());
+                        preferenceManager.saveUserName(getUserNameText());
+                        preferenceManager.savePassword(getPasswordText());
+                        preferenceManager.saveUserId(loginDO.getUserId());
+                        registerGCM();
+                        Intent dashboardIntent = new Intent(
+                                LoginActivity.this, HomeActivity.class);
+                        startActivity(dashboardIntent);
+                    }
+                    DTSCommonUtil.closeProgressBar();
+                }
+            }.execute();
+        } else {
+            DTSCommonUtil.closeProgressBar();
+        }
+    }
 
-				TextView userName = (TextView) findViewById(R.id.usernameId);
-				TextView password = (TextView) findViewById(R.id.passwordId);
+    public String registerGCM() {
+        regId = getRegistrationId(mContext);
+        if (TextUtils.isEmpty(regId)) {
+            registerInBackground();
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    "RegId already available. RegId: " + regId,
+                    Toast.LENGTH_LONG).show();
+        }
+        return regId;
+    }
 
-				userName.setText(user.getUserName());
-				password.setText(user.getPassword());
 
-				Toast.makeText(LoginActivity.mContext,
-						"No Internet.Check Your Connection.",
-						Toast.LENGTH_SHORT).show();
+    @SuppressWarnings("unchecked")
+    private void registerInBackground() {
+        new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object... params) {
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(mContext);
+                    }
+                    regId = gcm.register("1078992195391");
+                    Map<String, String> gcmParam = new HashMap<String, String>();
 
-			}
+                    gcmParam.put("userId", sharedpreferences.getString("userId",
+                            ""));
+                    gcmParam.put("key", regId);
+                    ConnectionUtil.connectToBackEnd(gcmParam, "app/saveGCMKey");
+                    Editor editor = sharedpreferences.edit();
+                    editor.putString(REG_ID, regId);
+                    editor.commit();
+                } catch (IOException ex) {
+                    Log.d("Error", "Error: " + ex.getMessage());
+                }
+                return "";
+            }
 
-		} else {
-			setContentView(R.layout.login);
-			addListener();
+        }.execute(null, null, null);
+    }
 
-		}
+    private String getRegistrationId(Context context) {
+        String registrationId = sharedpreferences.getString(REG_ID, "");
+        if (registrationId.isEmpty()) {
+            return "";
+        }
+        return registrationId;
+    }
 
-	}
+    public void addListener() {
 
-	public void login(View view) {
-		DTSCommonUtil.showProgressBar(LoginActivity.this);
-		View inputView = this.getCurrentFocus();
-		if (inputView != null) {
-			InputMethodManager inputManager = (InputMethodManager) this
-					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			inputManager.hideSoftInputFromWindow(inputView.getWindowToken(),
-					InputMethodManager.HIDE_NOT_ALWAYS);
-		}
+        final TextView forgetBtn = (TextView) findViewById(R.id.btnforgetPassword);
 
-		new Handler().postDelayed(new Runnable() {
+        if (forgetBtn != null)
+            forgetBtn.setOnClickListener(new View.OnClickListener() {
 
-			@Override
-			public void run() {
+                @Override
+                public void onClick(View v) {
+                    setContentView(R.layout.forget_password);
+                    superBackPressed = true;
+                    addListener();
 
-				EditText userNameEditText = (EditText) findViewById(R.id.usernameId);
-				EditText passwordEditText = (EditText) findViewById(R.id.passwordId);
+                    if (forgetBtn.getLinksClickable() == true) {
+                        forgetBtn.setLinkTextColor(Color.BLUE);
+                    }
 
-				if (userNameEditText.getText().length() == 0) {
-					DTSCommonUtil.closeProgressBar();
-					Toast.makeText(LoginActivity.this, "Enter UserName",
-							Toast.LENGTH_SHORT).show();
-				} else if (passwordEditText.getText().length() == 0) {
-					DTSCommonUtil.closeProgressBar();
-					Toast.makeText(LoginActivity.this, "Enter Password",
-							Toast.LENGTH_SHORT).show();
-				} else {
+                }
+            });
 
-					Map<String, String> paramsMap = new HashMap<String, String>();
+        final TextView regBackButton = (TextView) findViewById(R.id.regBackBtnId);
 
-					paramsMap.put("userName", ""
-							+ userNameEditText.getText().toString().trim());
-					paramsMap.put("password", ""
-							+ passwordEditText.getText().toString().trim());
+        if (regBackButton != null)
+            regBackButton.setOnClickListener(new View.OnClickListener() {
 
-					String response = ConnectionUtil.connectToBackEnd(
-							paramsMap, "appLogin");
+                @Override
+                public void onClick(View v) {
+                    setContentView(R.layout.login);
+                    superBackPressed = false;
+                    addListener();
+                }
+            });
+    }
 
-					if (response == null || response == "") {
-						DTSCommonUtil.closeProgressBar();
-						if (ConnectionUtil.NO_INTERNET_MESSAGE_SHOWN == "false")
-							Toast.makeText(
-									LoginActivity.this,
-									ConnectionUtil.CONNECTION_SERVER_DOWN_MESSAGE,
-									Toast.LENGTH_LONG).show();
-						return;
-					}
+    public void autoLogin() {
+        DTSCommonUtil.showProgressBar(getApplicationContext());
+        new AsyncTask<Void, LoginDO, LoginDO>(){
+            @Override
+            protected LoginDO doInBackground(Void... params) {
+                return LoginRequest.loginUser(getApplicationContext(), user.getUserName(), user.getPassword());
+            }
 
-					LoginDO loginDO = null;
-
-					ObjectMapper objectMapper = new ObjectMapper();
-					try {
-						loginDO = objectMapper.readValue(response,
-								LoginDO.class);
-
-						if (loginDO.isSuccess()==true) {
-
-							userId = loginDO.getUserId();
-
-							User u = new User();
-							u.setUserName(userNameEditText.getText().toString()
-									.trim());
-							u.setPassword(passwordEditText.getText().toString()
-									.trim());
-
-							MySQLiteHelper.insertUser(u,
-									getApplicationContext());
-
-							Editor editor = sharedpreferences.edit();
-							editor.putString("userName", userNameEditText
-									.getText().toString().trim());
-							editor.putString("password", passwordEditText
-									.getText().toString().trim());
-							editor.putString("userId", ""+loginDO.getUserId());
-							editor.commit();
-							
-							registerGCM();
-
-							Intent dashboardIntent = new Intent(
-									LoginActivity.this, HomeActivity.class);
-							startActivity(dashboardIntent);
-							DTSCommonUtil.closeProgressBar();
-
-						} else {
-							DTSCommonUtil.closeProgressBar();
-							Toast.makeText(
-									LoginActivity.this,
-									"Login Failure.Check UserName/Password Incorrect",
-									Toast.LENGTH_LONG).show();
-						}
-					} catch (JsonParseException e) {
-						e.printStackTrace();
-					} catch (JsonMappingException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}, 1000);
-
-	}
-
-	//
-	public String registerGCM() {
-	
-		regId = getRegistrationId(mContext);
-
-		if (TextUtils.isEmpty(regId)) {
-			registerInBackground();
-		} else {
-			Toast.makeText(getApplicationContext(),
-					"RegId already available. RegId: " + regId,
-					Toast.LENGTH_LONG).show();
-		}
-		return regId;
-	}
-
-	
-	@SuppressWarnings("unchecked")
-	private void registerInBackground() {
-		new AsyncTask() {
-			@Override
-			protected Object doInBackground(Object... params)  {
-				try {
-					if (gcm == null) {
-						gcm = GoogleCloudMessaging.getInstance(mContext);
-					}
-					regId = gcm.register("1078992195391");
-					Map<String, String> gcmParam = new HashMap<String, String>();
-
-					gcmParam.put("userId",sharedpreferences.getString("userId",
-							""));
-					gcmParam.put("key", regId);
-					ConnectionUtil.connectToBackEnd(gcmParam, "app/saveGCMKey");
-					Editor editor = sharedpreferences.edit();
-					editor.putString(REG_ID, regId);
-					editor.commit();
-				} catch (IOException ex) {
-					Log.d("Error", "Error: " + ex.getMessage());
-				}
-				return "";
-			}
-			
-		}.execute(null, null, null);
-	}
-
-	private String getRegistrationId(Context context) {
-		String registrationId = sharedpreferences.getString(REG_ID, "");
-		if (registrationId.isEmpty()) {
-			return "";
-		}
-		return registrationId;
-	}
-	
-	public void addListener() {
-
-		final TextView forgetBtn = (TextView) findViewById(R.id.btnforgetPassword);
-
-		if (forgetBtn != null)
-			forgetBtn.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					setContentView(R.layout.forget_password);
-					superBackPressed = true;
-					addListener();
-
-					if (forgetBtn.getLinksClickable() == true) {
-						forgetBtn.setLinkTextColor(Color.BLUE);
-					}
-
-				}
-			});
-
-		final TextView regBackButton = (TextView) findViewById(R.id.regBackBtnId);
-
-		if (regBackButton != null)
-			regBackButton.setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-
-					setContentView(R.layout.login);
-					superBackPressed = false;
-					addListener();
-
-				}
-			});
-
-	}
-
-	public String autoLogin1() {
-		autoLogin();
-
-		return "";
-	}
-
-	public void autoLogin() {
-
-		Map<String, String> paramsMap = new HashMap<String, String>();
-
-		paramsMap.put("userName", "" + user.getUserName());
-		paramsMap.put("password", "" + user.getPassword());
-
-		String response = ConnectionUtil.connectToBackEnd(paramsMap, "appLogin");
-
-		if (response == null || response == "") {
-			setContentView(R.layout.login);
-			addListener();
-
-			TextView userName = (TextView) findViewById(R.id.usernameId);
-			TextView password = (TextView) findViewById(R.id.passwordId);
-
-			userName.setText(user.getUserName());
-			password.setText(user.getPassword());
-			if (ConnectionUtil.NO_INTERNET_MESSAGE_SHOWN.equals("false"))
-				Toast.makeText(LoginActivity.mContext,
-						ConnectionUtil.CONNECTION_SERVER_DOWN_MESSAGE,
-						Toast.LENGTH_LONG).show();
-			return;
-		}
-
-		LoginDO loginDO = null;
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			loginDO = objectMapper.readValue(response, LoginDO.class);
-
-			if (loginDO.isSuccess()==true) {
-				userId = loginDO.getUserId();
-				Editor editor = sharedpreferences.edit();
-				editor.putString("userName", user.getUserName());
-				editor.putString("password", user.getPassword());
-				editor.putString("userId",""+ loginDO.getUserId());
-				editor.commit();
+            @Override
+            protected void onPostExecute(LoginDO loginDO) {
+                DTSCommonUtil.closeProgressBar();
+                if (loginDO == null) {
+                    setContentView(R.layout.login);
+                    addListener();
+                    setUserCredentials();
+                } else if (loginDO.isSuccess()) {
+                    userId = loginDO.getUserId();
+                    SharedPreferenceManager preferenceManager = SharedPreferenceManager.getSharedPreferenceManager(getApplicationContext());
+                    preferenceManager.saveUserId(loginDO.getUserId());
+                    preferenceManager.savePassword(user.getPassword());
+                    preferenceManager.saveUserName(user.getUserName());
 
 				/*Intent dashboardIntent = new Intent(this,
-						DashboardActivity.class);
+                        DashboardActivity.class);
 				startActivity(dashboardIntent);*/
-				Intent landingIntent = new Intent(this,
-						HomeActivity.class);
-				startActivity(landingIntent);
+                    Intent landingIntent = new Intent(LoginActivity.this,
+                            HomeActivity.class);
+                    startActivity(landingIntent);
+                } else {
+                    Toast.makeText(LoginActivity.this, ErrorMessages.LOGIN_FAILURE,
+                            Toast.LENGTH_LONG).show();
+                    setContentView(R.layout.login);
+                    addListener();
+                    setUserCredentials();
+                }
+            }
+        };
+    }
 
-			} else {
-				Toast.makeText(LoginActivity.this, "Login Failure",
-						Toast.LENGTH_LONG).show();
-				setContentView(R.layout.login);
-				addListener();
-				setUserCredentials();
-			}
-		} catch (JsonParseException e) {
-			Toast.makeText(this, "Login Failure", Toast.LENGTH_LONG).show();
-			setContentView(R.layout.login);
-			addListener();
-			setUserCredentials();
-			// setContentView(R.layout.login);
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			Toast.makeText(this, "Login Failure", Toast.LENGTH_LONG).show();
-			setContentView(R.layout.login);
-			addListener();
-			setUserCredentials();
-			// setContentView(R.layout.login);
-			e.printStackTrace();
-		} catch (IOException e) {
-			Toast.makeText(this, "Login Failure", Toast.LENGTH_LONG).show();
-			setContentView(R.layout.login);
-			addListener();
-			setUserCredentials();
-			// setContentView(R.layout.login);
-			e.printStackTrace();
-		}
+    public void setUserCredentials() {
+        TextView userName = (TextView) findViewById(R.id.usernameId);
+        TextView password = (TextView) findViewById(R.id.passwordId);
 
-	}
+        userName.setText(user.getUserName());
+        password.setText(user.getPassword());
 
-	public void setUserCredentials() {
-		TextView userName = (TextView) findViewById(R.id.usernameId);
-		TextView password = (TextView) findViewById(R.id.passwordId);
+    }
 
-		userName.setText(user.getUserName());
-		password.setText(user.getPassword());
+    private boolean isUserInputValid() {
+        String usernameText = getUserNameText();
+        String passwordText = getPasswordText();
+        if (JojoUtils.isNullOrEmpty(usernameText)) {
+            DTSCommonUtil.closeProgressBar();
+            Toast.makeText(LoginActivity.this, "Enter UserName",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (JojoUtils.isNullOrEmpty(passwordText)) {
+            DTSCommonUtil.closeProgressBar();
+            Toast.makeText(LoginActivity.this, "Enter Password",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
 
-	}
+    private String getUserNameText() {
+        Editable userNameEditText = ((EditText) findViewById(R.id.usernameId)).getText();
+        return JojoUtils.getStringFromEditable(userNameEditText);
+    }
+
+
+    private String getPasswordText() {
+        Editable passwordEditText = ((EditText) findViewById(R.id.passwordId)).getText();
+        return JojoUtils.getStringFromEditable(passwordEditText);
+    }
 }

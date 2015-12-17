@@ -23,8 +23,11 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pin91.jojovehicleapp.R;
 import com.pin91.jojovehicleapp.model.PacketTrackingBean;
+import com.pin91.jojovehicleapp.model.PickupStatus;
 import com.pin91.jojovehicleapp.network.ConnectionUtil;
+import com.pin91.jojovehicleapp.network.requests.UpdateVehiclePickUpRequest;
 import com.pin91.jojovehicleapp.utils.DTSCommonUtil;
+import com.pin91.jojovehicleapp.utils.SharedPreferenceManager;
 
 
 public class AllocatedPacketActivity extends Activity {
@@ -59,11 +62,18 @@ public class AllocatedPacketActivity extends Activity {
 		Map<String, String> paramsMap = new HashMap<String, String>();
 		paramsMap.put("packetTrackingId",""+packetTrackingId);
 		paramsMap.put("status", "ACCEPT");
-		paramsMap.put("packetId", ""+packetId);
-		paramsMap.put("userId",HomeActivity.sharedpreferences.getString("userId",
-				""));
+		paramsMap.put("packetId", "" + packetId);
+		paramsMap.put("userId", HomeActivity.sharedpreferences.getString("userId",
+                ""));
 		ConnectionUtil.connectToBackEnd(paramsMap,
-				"app/updateVehiclePickUp");
+                "app/updateVehiclePickUp");
+        PickupStatus pickupStatus = new PickupStatus();
+        pickupStatus.setPacketId(packetId);
+        pickupStatus.setPacketTrackingId(packetTrackingId);
+        pickupStatus.setStatus(PickupStatus.STATUS_ACCEPT);
+        pickupStatus.setUserId(SharedPreferenceManager.getSharedPreferenceManager(getApplicationContext()).getUserId());
+        UpdateVehiclePickUpRequest.updateVehiclePickupStatus(pickupStatus);
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				AllocatedPacketActivity.this);
 		builder.setTitle("Alert");

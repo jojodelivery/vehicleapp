@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class ConnectionUtil {
 
-    public static String CONNECTION_BACKEND = "http://192.168.1.8:8080/DTS/";
+    public static String CONNECTION_BACKEND = "http://52.76.116.161:8080/DTS";
     public static String NO_INTERNET_MESSAGE_SHOWN = "true";
     public static String CONNECTION_NO_INTERNET = "No Internet.Check Your Connection.";
     public static String CONNECTION_SERVER_DOWN_MESSAGE = "Service down for maintainance. Please try after some time.";
