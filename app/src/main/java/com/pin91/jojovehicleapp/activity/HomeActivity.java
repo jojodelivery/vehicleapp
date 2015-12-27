@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -18,7 +19,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pin91.jojovehicleapp.R;
 import com.pin91.jojovehicleapp.model.VehicleBean;
 import com.pin91.jojovehicleapp.network.ConnectionUtil;
+import com.pin91.jojovehicleapp.network.requests.GetVehicleDetailsByContextRequest;
 import com.pin91.jojovehicleapp.utils.DTSCommonUtil;
+import com.pin91.jojovehicleapp.utils.SharedPreferenceManager;
 import com.pin91.jojovehicleapp.views.widgets.DashboardCell;
 
 import java.io.IOException;
@@ -34,48 +37,20 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.dashboard);
         loadVehicleData();
 
-        RelativeLayout notification = (RelativeLayout) findViewById(R.id.notification);
-        notification.setOnTouchListener(new View.OnTouchListener() {
+        DashboardCell allocatedPackets = (DashboardCell) findViewById(R.id.allocated_packet);
+        DashboardCell pickupPackets = (DashboardCell)findViewById(R.id.pickups);
 
+        allocatedPackets.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        startActivity(new Intent(HomeActivity.this, NotificationActivity.class));
-                        break;
-                }
-                return true;
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, AllocatedPacketActivity.class));
             }
         });
 
-        RelativeLayout allocatedPacket = (RelativeLayout) findViewById(R.id.allocated_packet);
-        allocatedPacket.setOnTouchListener(new View.OnTouchListener() {
-
+        pickupPackets.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        startActivity(new Intent(HomeActivity.this, AllocatedPacketActivity.class));
-                        break;
-                }
-                return true;
-            }
-        });
-
-        RelativeLayout pickup = (RelativeLayout) findViewById(R.id.pickup);
-        pickup.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        startActivity(new Intent(HomeActivity.this, PickUpActivity.class));
-                        break;
-                }
-                return true;
+            public void onClick(View v) {
+                startActivity(new Intent(HomeActivity.this, PickUpActivity.class));
             }
         });
 
@@ -97,40 +72,21 @@ public class HomeActivity extends AppCompatActivity {
 
 
     public void loadVehicleData() {
-        Map<String, String> paramsMap = new HashMap<String, String>();
 
-        paramsMap.put("userId", HomeActivity.sharedpreferences.getString("userId",
-                ""));
-        String response = ConnectionUtil.connectToBackEnd(
-                paramsMap, "app/getVehicleDetailsByContext");
+        new AsyncTask<Void, VehicleBean, VehicleBean>(){
+            @Override
+            protected VehicleBean doInBackground(Void... params) {
+                return GetVehicleDetailsByContextRequest.getVehicleData(getApplicationContext(),
+                        SharedPreferenceManager.getSharedPreferenceManager(getApplicationContext()).getUserId());
+            }
 
-        if (response == null || response == "") {
-            DTSCommonUtil.closeProgressBar();
-            if (ConnectionUtil.NO_INTERNET_MESSAGE_SHOWN == "false")
-                Toast.makeText(HomeActivity.this,
-                        ConnectionUtil.CONNECTION_SERVER_DOWN_MESSAGE,
-                        Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        VehicleBean vehicleBean = null;
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            vehicleBean = objectMapper.readValue(response,
-                    VehicleBean.class);
-
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString("vehicleId", "" + vehicleBean.getVehicleId());
-            editor.commit();
-
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            @Override
+            protected void onPostExecute(VehicleBean vehicleBean) {
+               if(vehicleBean != null){
+                   SharedPreferenceManager.getSharedPreferenceManager(getApplicationContext()).saveVehicleId(vehicleBean.getVehicleId());
+               }
+            }
+        }.execute();
     }
 
     @Override

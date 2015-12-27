@@ -14,6 +14,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class JojoUtils {
 
     private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+ //   private static Context appContext;
+
+//    public static Context getContext(){
+//        return appContext;
+//    }
+//
+//    public static void setContext(Context appContext){
+//        JojoUtils.appContext = appContext;
+//    }
 
     public static void setBackground(View view, int drawable){
         if(Build.VERSION.SDK_INT >= 21){

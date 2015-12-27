@@ -5,4 +5,13 @@
     <color name="colorAccent">#FF4081</color>
     <color name="dashboard_cell_circle_boundary">#ff0000</color>
     <color name="black">#000000</color>
+    <color name="dashboard_icon_golden_yellow">#ffc100</color>
+    <color name="white">#ffffff</color>
+    <color name="dashboard_cell_blue">#0488c9</color>
+    <color name="notification_red">#f0373a</color>
+    <color name="dashboard_cell_margin">#088bcc</color>
+    <color name="primary_material_light">#9e9e9e</color>
+    <color name="primary_dark_material_light_light_status_bar">#e0e0e0</color>
+    <color name="accent_material_light">#4070ff</color>
+    <color name="primary_text_default_material_light">#de8f7171</color>
 </resources>

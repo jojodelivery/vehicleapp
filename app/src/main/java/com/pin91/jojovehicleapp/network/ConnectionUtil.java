@@ -5,9 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
-
-import com.pin91.jojovehicleapp.activity.LoginActivity;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -25,10 +24,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-/**
- *
- */
 
 /**
  * @author Debdutta Bhattacharya
@@ -49,7 +44,6 @@ public class ConnectionUtil {
         servletUrl = url;
         String response = new ConnectionUtil().new HttpAsyncTaskGetTestToken()
                 .doInBackground(url);
-
         return response;
     }
 
@@ -62,7 +56,7 @@ public class ConnectionUtil {
                 total.append(line);
             }
         } catch (Exception e) {
-            Toast.makeText(LoginActivity.mContext, "Stream Exception",
+            Toast.makeText(context, "Stream Exception",
                     Toast.LENGTH_SHORT).show();
         }
         return total.toString();
@@ -88,7 +82,7 @@ public class ConnectionUtil {
     }
 
     public static String getResult(String url) {
-
+        Log.d("Connection", url);
         String failureReturnText = "";
         NO_INTERNET_MESSAGE_SHOWN = "false";
         if (isNetworkAvailable()) {
@@ -112,9 +106,7 @@ public class ConnectionUtil {
                 for (Map.Entry<String, String> entry : paramsListMap.entrySet()) {
                     urlParameters.add(new BasicNameValuePair(entry.getKey(),
                             entry.getValue()));
-
                 }
-
             try {
                 httpPost.setEntity(new UrlEncodedFormEntity(urlParameters));
                 HttpResponse response = httpclient.execute(httpPost);
@@ -146,23 +138,20 @@ public class ConnectionUtil {
 				 * .show();
 				 */
             } catch (IOException e) {
-                Toast.makeText(LoginActivity.mContext,
+                Toast.makeText(context,
                         "No Internet.Check Your Connection.", Toast.LENGTH_LONG)
                         .show();
                 NO_INTERNET_MESSAGE_SHOWN = "true";
             } catch (Exception e) {
             }
-
         } else {
-            Toast.makeText(LoginActivity.mContext,
+            Toast.makeText(context,
                     "No Internet.Check Your Connection.", Toast.LENGTH_LONG)
                     .show();
             NO_INTERNET_MESSAGE_SHOWN = "true";
 
         }
-
         return failureReturnText;
-
     }
 
     public static boolean isNetworkAvailable() {
@@ -172,5 +161,4 @@ public class ConnectionUtil {
                 .getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
 }

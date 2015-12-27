@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="DashboardCell">
-        <attr name="dashboardText" format="string"></attr>
-        <attr name="dashboardFontSize" format="integer"></attr>
+        <attr name="iconText" format="string"></attr>
+        <attr name="cellTitle" format="string"></attr>
+        <attr name="iconFontSize" format="integer"></attr>
         <attr name="notificationTextSize" format="integer"></attr>
-        <attr name="cellBackground" format="integer"></attr>
-        <attr name="notificationTextColor" format="integer"></attr>
-        <attr name="dashboardIconColor" format="integer"></attr>
+        <attr name="cellBackground" format="integer|color"></attr>
+        <attr name="notificationTextColor" format="color"></attr>
+        <attr name="iconColor" format="color"></attr>
     </declare-styleable>
 </resources>

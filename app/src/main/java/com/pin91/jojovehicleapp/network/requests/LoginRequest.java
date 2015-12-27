@@ -20,14 +20,14 @@ import java.util.Map;
 public class LoginRequest {
 
     private static final String REQUEST_SUB_URL = "appLogin";
-    public static final String USERNAME = "userName";
-    public static final String PASSWORD = "password";
+    public static final String KEY_USERNAME = "userName";
+    public static final String KEY_PASSWORD = "password";
 
     public static LoginDO loginUser(Context context, String userName, String password) {
         Map<String, String> paramsMap = new HashMap<String, String>();
 
-        paramsMap.put(USERNAME, userName);
-        paramsMap.put(PASSWORD, password);
+        paramsMap.put(KEY_USERNAME, userName);
+        paramsMap.put(KEY_PASSWORD, password);
 
         String response = ConnectionUtil.connectToBackEnd(
                 paramsMap, REQUEST_SUB_URL);

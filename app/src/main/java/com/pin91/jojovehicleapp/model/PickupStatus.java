@@ -4,8 +4,6 @@ package com.pin91.jojovehicleapp.model;
  * Created by udit on 12/17/2015.
  */
 public class PickupStatus {
-    public static final String STATUS_ACCEPT = "ACCEPT";
-    public static final String STATUS_REJECT = "REJECT";
     private String packetTrackingId;
     private String status;
     private String packetId;
@@ -43,5 +41,20 @@ public class PickupStatus {
         this.userId = userId;
     }
 
+    public enum STATUS {
+        ACCEPT("ACCEPT"),
+        REJECT("REJECT"),
+        IN_TRANSIT("IN_TRANSIT");
+
+        private String status;
+
+        private STATUS(String status){
+            this.status = status;
+        }
+
+        public String getValue(){
+            return this.status;
+        }
+    }
 
 }

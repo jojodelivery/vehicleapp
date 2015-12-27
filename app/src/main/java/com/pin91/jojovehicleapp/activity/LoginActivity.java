@@ -5,14 +5,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -27,28 +25,19 @@ import com.pin91.jojovehicleapp.model.User;
 import com.pin91.jojovehicleapp.network.ConnectionUtil;
 import com.pin91.jojovehicleapp.network.ErrorMessages;
 import com.pin91.jojovehicleapp.network.requests.LoginRequest;
+import com.pin91.jojovehicleapp.network.requests.SaveGCMKeyRequest;
 import com.pin91.jojovehicleapp.utils.DTSCommonUtil;
 import com.pin91.jojovehicleapp.utils.JojoUtils;
 import com.pin91.jojovehicleapp.utils.MySQLiteHelper;
 import com.pin91.jojovehicleapp.utils.SharedPreferenceManager;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class LoginActivity extends Activity {
 
-    GoogleCloudMessaging gcm;
-    public static Context mContext = null;
     public static Integer userId;
     SharedPreferences sharedpreferences = null;
     private User user;
     boolean superBackPressed = false;
-    String regId;
-
-    public static final String REG_ID = "regId";
-    private static final String APP_VERSION = "appVersion";
 
     static final String TAG = "Register Activity";
 
@@ -57,8 +46,7 @@ public class LoginActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mContext = LoginActivity.this;
-        ConnectionUtil.context = LoginActivity.this;
+        ConnectionUtil.context = getApplicationContext();
         superBackPressed = false;
 
         // Version check for > 9 is removed as min API supported
@@ -75,7 +63,7 @@ public class LoginActivity extends Activity {
                 setContentView(R.layout.login);
                 addListener();
                 setUserCredentials();
-                Toast.makeText(LoginActivity.mContext, ErrorMessages.UNABLE_TO_CONNECT, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), ErrorMessages.UNABLE_TO_CONNECT, Toast.LENGTH_SHORT).show();
             }
         } else {
             setContentView(R.layout.login);
@@ -84,7 +72,7 @@ public class LoginActivity extends Activity {
     }
 
     public void login(View view) {
-        DTSCommonUtil.showProgressBar(LoginActivity.this);
+      //  DTSCommonUtil.showProgressBar(this);
         View inputView = this.getCurrentFocus();
         if (inputView != null) {
             InputMethodManager inputManager = (InputMethodManager) this
@@ -128,7 +116,7 @@ public class LoginActivity extends Activity {
     }
 
     public String registerGCM() {
-        regId = getRegistrationId(mContext);
+        String regId = getRegistrationId(getApplicationContext());
         if (TextUtils.isEmpty(regId)) {
             registerInBackground();
         } else {
@@ -142,34 +130,35 @@ public class LoginActivity extends Activity {
 
     @SuppressWarnings("unchecked")
     private void registerInBackground() {
-        new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object... params) {
-                try {
-                    if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(mContext);
-                    }
-                    regId = gcm.register("1078992195391");
-                    Map<String, String> gcmParam = new HashMap<String, String>();
-
-                    gcmParam.put("userId", sharedpreferences.getString("userId",
-                            ""));
-                    gcmParam.put("key", regId);
-                    ConnectionUtil.connectToBackEnd(gcmParam, "app/saveGCMKey");
-                    Editor editor = sharedpreferences.edit();
-                    editor.putString(REG_ID, regId);
-                    editor.commit();
-                } catch (IOException ex) {
-                    Log.d("Error", "Error: " + ex.getMessage());
-                }
-                return "";
-            }
-
-        }.execute(null, null, null);
+        SaveGCMKeyRequest.registerInBackground(getApplicationContext());
+//        new AsyncTask() {
+//            @Override
+//            protected Object doInBackground(Object... params) {
+//                try {
+//                    if (gcm == null) {
+//                        gcm = GoogleCloudMessaging.getInstance(mContext);
+//                    }
+//                    regId = gcm.register("1078992195391");
+//                    Map<String, String> gcmParam = new HashMap<String, String>();
+//
+//                    gcmParam.put("userId", sharedpreferences.getString("userId",
+//                            ""));
+//                    gcmParam.put("key", regId);
+//                    ConnectionUtil.connectToBackEnd(gcmParam, "app/saveGCMKey");
+//                    Editor editor = sharedpreferences.edit();
+//                    editor.putString(REG_ID, regId);
+//                    editor.commit();
+//                } catch (IOException ex) {
+//                    Log.d("Error", "Error: " + ex.getMessage());
+//                }
+//                return "";
+//            }
+//
+//        }.execute(null, null, null);
     }
 
     private String getRegistrationId(Context context) {
-        String registrationId = sharedpreferences.getString(REG_ID, "");
+        String registrationId = SharedPreferenceManager.getSharedPreferenceManager(getApplicationContext()).getRegId();
         if (registrationId.isEmpty()) {
             return "";
         }
@@ -211,7 +200,7 @@ public class LoginActivity extends Activity {
     }
 
     public void autoLogin() {
-        DTSCommonUtil.showProgressBar(getApplicationContext());
+       // DTSCommonUtil.showProgressBar(this);
         new AsyncTask<Void, LoginDO, LoginDO>(){
             @Override
             protected LoginDO doInBackground(Void... params) {
@@ -231,13 +220,9 @@ public class LoginActivity extends Activity {
                     preferenceManager.saveUserId(loginDO.getUserId());
                     preferenceManager.savePassword(user.getPassword());
                     preferenceManager.saveUserName(user.getUserName());
-
-				/*Intent dashboardIntent = new Intent(this,
-                        DashboardActivity.class);
-				startActivity(dashboardIntent);*/
-                    Intent landingIntent = new Intent(LoginActivity.this,
-                            HomeActivity.class);
-                    startActivity(landingIntent);
+                    Intent dashboardIntent = new Intent(
+                            LoginActivity.this, HomeActivity.class);
+                    startActivity(dashboardIntent);
                 } else {
                     Toast.makeText(LoginActivity.this, ErrorMessages.LOGIN_FAILURE,
                             Toast.LENGTH_LONG).show();
@@ -246,7 +231,7 @@ public class LoginActivity extends Activity {
                     setUserCredentials();
                 }
             }
-        };
+        }.execute();
     }
 
     public void setUserCredentials() {

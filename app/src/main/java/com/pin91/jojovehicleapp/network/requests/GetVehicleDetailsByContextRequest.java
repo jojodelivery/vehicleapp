@@ -23,10 +23,10 @@ public class GetVehicleDetailsByContextRequest {
     private static final String USER_ID = "userId";
     private static final String REQUEST_SUB_URL = "app/getVehicleDetailsByContext";
 
-    public static VehicleBean loadVehicleData(Context context, String userId) {
+    public static VehicleBean getVehicleData(Context context, String userId) {
         Map<String, String> paramsMap = new HashMap<String, String>();
 
-        paramsMap.put(USER_ID, userId);
+        paramsMap.put(USER_ID, "28");
         String response = ConnectionUtil.connectToBackEnd(
                 paramsMap,REQUEST_SUB_URL);
 
