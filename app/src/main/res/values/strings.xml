@@ -26,4 +26,14 @@
     <string name="load_details">Load Details</string>
     <string name="in_transit_packet">In Transit Packet</string>
     <string name="pick_up_packet">Pick up Packet</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
 </resources>

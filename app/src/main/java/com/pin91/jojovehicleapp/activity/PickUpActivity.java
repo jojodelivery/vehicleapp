@@ -34,8 +34,8 @@ import com.pin91.jojovehicleapp.utils.SharedPreferenceManager;
 public class PickUpActivity extends Activity {
 
     TextView textView;
-    ImageView acceptBtn;
-    ImageView rejectBtn;
+    TextView acceptBtn;
+    TextView rejectBtn;
     int packetTrackingId;
     int packetId;
     private final String TEXT_FONT_STYLE = "app_icons.ttf";
@@ -44,14 +44,8 @@ public class PickUpActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+        initializeViews();
         setContentView(R.layout.order_packet_selection_view);
-//        mContext = PickUpActivity.this;
-//        textView = (TextView) findViewById(R.id.pickupMessage);
-//        acceptBtn = (ImageView) findViewById(R.id.acceptBtn);
-//        rejectBtn = (ImageView) findViewById(R.id.rejectBtn);
         reloadData();
     }
 
@@ -59,8 +53,8 @@ public class PickUpActivity extends Activity {
         TextView locationView = (TextView)findViewById(R.id.locationIcon);
         TextView nextIcon = (TextView)findViewById(R.id.next_arrow);
         TextView previousIcon = (TextView)findViewById(R.id.previous_arrow);
-        TextView acceptBtn = (TextView)findViewById(R.id.acceptBtn);
-        TextView rejectBtn = (TextView)findViewById(R.id.rejectBtn);
+        acceptBtn = (TextView)findViewById(R.id.acceptBtn);
+        rejectBtn = (TextView)findViewById(R.id.rejectBtn);
         Typeface tf = Typeface.createFromAsset(getAssets(), TEXT_FONT_STYLE);
         nextIcon.setTypeface(tf);
         previousIcon.setTypeface(tf);

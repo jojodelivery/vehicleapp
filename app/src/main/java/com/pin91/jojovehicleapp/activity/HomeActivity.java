@@ -1,7 +1,6 @@
 package com.pin91.jojovehicleapp.activity;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,22 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pin91.jojovehicleapp.R;
 import com.pin91.jojovehicleapp.model.VehicleBean;
-import com.pin91.jojovehicleapp.network.ConnectionUtil;
 import com.pin91.jojovehicleapp.network.requests.GetVehicleDetailsByContextRequest;
-import com.pin91.jojovehicleapp.utils.DTSCommonUtil;
 import com.pin91.jojovehicleapp.utils.SharedPreferenceManager;
 import com.pin91.jojovehicleapp.views.widgets.DashboardCell;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
     public static SharedPreferences sharedpreferences = null;
@@ -35,10 +24,10 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard);
-        loadVehicleData();
 
+        loadVehicleData();
         DashboardCell allocatedPackets = (DashboardCell) findViewById(R.id.allocated_packet);
-        DashboardCell pickupPackets = (DashboardCell)findViewById(R.id.pickups);
+        DashboardCell pickupPackets = (DashboardCell) findViewById(R.id.pickups);
 
         allocatedPackets.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +58,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-
 
     public void loadVehicleData() {
 
