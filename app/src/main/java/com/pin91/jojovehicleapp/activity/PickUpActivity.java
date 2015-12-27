@@ -9,11 +9,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,23 +46,33 @@ public class PickUpActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.order_pickup_view);
         initializeViews();
-        setContentView(R.layout.order_packet_selection_view);
         reloadData();
     }
 
     private void initializeViews(){
-        TextView locationView = (TextView)findViewById(R.id.locationIcon);
-        TextView nextIcon = (TextView)findViewById(R.id.next_arrow);
-        TextView previousIcon = (TextView)findViewById(R.id.previous_arrow);
-        acceptBtn = (TextView)findViewById(R.id.acceptBtn);
-        rejectBtn = (TextView)findViewById(R.id.rejectBtn);
+        View pageSwiper = findViewById(R.id.page_swipe);
+        TextView locationView = (TextView) findViewById(R.id.locationIcon);
+        TextView nextIcon = (TextView)pageSwiper.findViewById(R.id.next_arrow);
+        TextView previousIcon = (TextView)pageSwiper.findViewById(R.id.previous_arrow);
+    //    acceptBtn = (TextView)findViewById(R.id.acceptBtn);
+     //   rejectBtn = (TextView)findViewById(R.id.rejectBtn);
         Typeface tf = Typeface.createFromAsset(getAssets(), TEXT_FONT_STYLE);
         nextIcon.setTypeface(tf);
         previousIcon.setTypeface(tf);
         locationView.setTypeface(tf);
-        acceptBtn.setTypeface(tf);
-        rejectBtn.setTypeface(tf);
+        textView = (TextView)findViewById(R.id.order_name);
+        Button detailOrderInfoBtn = (Button)findViewById(R.id.detailOrderInfoButton);
+        detailOrderInfoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent orderPacketDetail = new Intent(PickUpActivity.this, OrderPacketDetailActivity.class);
+                startActivity(orderPacketDetail);
+            }
+        });
+      //  acceptBtn.setTypeface(tf);
+      //  rejectBtn.setTypeface(tf);
     }
 
     @Override
@@ -139,8 +151,8 @@ public class PickUpActivity extends Activity {
         if(JojoUtils.isNullOrEmpty(message)){
             textView.setText(Html.fromHtml(message));
         }
-        acceptBtn.setVisibility(visibility);
-        rejectBtn.setVisibility(visibility);
+    //    acceptBtn.setVisibility(visibility);
+     //   rejectBtn.setVisibility(visibility);
     }
     private PickupStatus getPickupStatusObject(String status){
         PickupStatus pickupStatus = new PickupStatus();
