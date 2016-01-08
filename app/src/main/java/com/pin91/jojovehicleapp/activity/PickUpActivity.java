@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -12,12 +13,13 @@ import android.widget.TextView;
 import com.pin91.jojovehicleapp.R;
 import com.pin91.jojovehicleapp.model.OrderDO;
 import com.pin91.jojovehicleapp.network.requests.GetPickupDetailsRequest;
+import com.pin91.jojovehicleapp.utils.HttpAsyncTask;
 import com.pin91.jojovehicleapp.utils.SharedPreferenceManager;
 import com.pin91.jojovehicleapp.views.action.Pager;
 
 import java.util.List;
 
-public class PickUpActivity extends Activity {
+public class PickUpActivity extends AppCompatActivity {
 
 
     Pager<OrderDO> orderList;
@@ -31,7 +33,7 @@ public class PickUpActivity extends Activity {
     }
 
     private void reloadData() {
-        new AsyncTask<Void, List<OrderDO>, List<OrderDO>>(){
+        new HttpAsyncTask<Void, List<OrderDO>, List<OrderDO>>(){
 
             @Override
             protected List<OrderDO> doInBackground(Void... voids) {
@@ -66,10 +68,10 @@ public class PickUpActivity extends Activity {
 
     private void setView(final OrderDO orderDO){
         TextView distributorName = (TextView)findViewById(R.id.distributorName);
-        TextView distributorAddress = (TextView)findViewById(R.id.retailerName);
+        TextView distributorAddress = (TextView)findViewById(R.id.distributorAddress);
         TextView orderName = (TextView)findViewById(R.id.orderName);
         distributorName.setText(orderDO.getDistributor());
-        distributorAddress.setText(orderDO.getRetailer());
+        distributorAddress.setText(orderDO.getDestinationAddress());
         orderName.setText(orderDO.getOrderName());
 
         Button detailOrderInfoBtn = (Button)findViewById(R.id.detailOrderInfoButton);

@@ -10,6 +10,7 @@ public class OrderDO implements Serializable{
     String orderName;
     String distributor;
     String retailer;
+    String destinationAddress;
     ArrayList<PacketTrackingBean> packetList;
 
     public String getOrderName() {
@@ -42,5 +43,13 @@ public class OrderDO implements Serializable{
 
     public void setDistributor(String distributor) {
         this.distributor = distributor;
+    }
+
+    public String getDestinationAddress() {
+        return destinationAddress;
+    }
+
+    public void setDestinationAddress(String destinationAddress) {
+        this.destinationAddress = destinationAddress;
     }
 }

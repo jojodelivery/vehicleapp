@@ -42,8 +42,7 @@ public class ConnectionUtil {
                                           String url) {
         paramsListMap = paramsMap;
         servletUrl = url;
-        String response = new ConnectionUtil().new HttpAsyncTaskGetTestToken()
-                .doInBackground(url);
+        String response = getResult(url);
         return response;
     }
 
@@ -56,8 +55,8 @@ public class ConnectionUtil {
                 total.append(line);
             }
         } catch (Exception e) {
-            Toast.makeText(context, "Stream Exception",
-                    Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "Stream Exception",
+//                    Toast.LENGTH_SHORT).show();
         }
         return total.toString();
     }
@@ -104,16 +103,16 @@ public class ConnectionUtil {
                 return line;
             }
         } catch (ClientProtocolException e) {
-            Toast.makeText(context, "Unable to connect. " + e.getMessage(), Toast.LENGTH_LONG).show();
+           // Toast.makeText(context, "Unable to connect. " + e.getMessage(), Toast.LENGTH_LONG).show();
         } catch (IOException e) {
-            Toast.makeText(context,
-                    "No Internet.Check Your Connection.", Toast.LENGTH_LONG)
-                    .show();
-            NO_INTERNET_MESSAGE_SHOWN = "true";
+//            Toast.makeText(context,
+//                    "No Internet.Check Your Connection.", Toast.LENGTH_LONG)
+//                    .show();
+//            NO_INTERNET_MESSAGE_SHOWN = "true";
         } catch (Exception e) {
-            Toast.makeText(context, "Unable to connect. " + e.getMessage(), Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "Unable to connect. " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-        return null;
+        return ErrorMessages.UNABLE_TO_CONNECT;
     }
 
     public static boolean isNetworkAvailable() {

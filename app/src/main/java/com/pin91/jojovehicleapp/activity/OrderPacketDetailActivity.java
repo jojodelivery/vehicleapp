@@ -34,7 +34,9 @@ public class OrderPacketDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.order_packet_selection_view);
         orderDO = (OrderDO)getIntent().getExtras().get(ORDER);
-        packetDeliveryStatus = getIntent().getExtras().getString(PACKET_DELIVERY_STATUS);
+        if(getIntent().getExtras().containsKey(PACKET_DELIVERY_STATUS)){
+            packetDeliveryStatus = getIntent().getExtras().getString(PACKET_DELIVERY_STATUS);
+        }
         initializeViews();
     }
 

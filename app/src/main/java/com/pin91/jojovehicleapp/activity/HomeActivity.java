@@ -8,12 +8,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.pin91.jojovehicleapp.R;
 import com.pin91.jojovehicleapp.model.NotificationsCounter;
 import com.pin91.jojovehicleapp.model.VehicleBean;
+import com.pin91.jojovehicleapp.network.ConnectionUtil;
+import com.pin91.jojovehicleapp.network.ErrorMessages;
 import com.pin91.jojovehicleapp.network.requests.DashboardCount;
 import com.pin91.jojovehicleapp.network.requests.GetVehicleDetailsByContextRequest;
+import com.pin91.jojovehicleapp.utils.HttpAsyncTask;
 import com.pin91.jojovehicleapp.utils.SharedPreferenceManager;
 import com.pin91.jojovehicleapp.views.widgets.DashboardCell;
 
@@ -120,7 +124,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void renderNotificationCount(){
-        new AsyncTask<Void, NotificationsCounter, NotificationsCounter>(){
+        new HttpAsyncTask<Void, NotificationsCounter, NotificationsCounter>(){
 
 
             @Override
@@ -132,10 +136,9 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(NotificationsCounter notificationsCounter) {
-                if(notificationsCounter != null){
+                if(notificationsCounter != null) {
                     setNotificationCount(notificationsCounter);
                 }
-
             }
         }.execute();
     }

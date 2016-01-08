@@ -27,6 +27,7 @@ import com.pin91.jojovehicleapp.network.ErrorMessages;
 import com.pin91.jojovehicleapp.network.requests.LoginRequest;
 import com.pin91.jojovehicleapp.network.requests.SaveGCMKeyRequest;
 import com.pin91.jojovehicleapp.utils.DTSCommonUtil;
+import com.pin91.jojovehicleapp.utils.HttpAsyncTask;
 import com.pin91.jojovehicleapp.utils.JojoUtils;
 import com.pin91.jojovehicleapp.utils.MySQLiteHelper;
 import com.pin91.jojovehicleapp.utils.SharedPreferenceManager;
@@ -82,7 +83,7 @@ public class LoginActivity extends Activity {
         }
 
         if (isUserInputValid()) {
-            new AsyncTask<Void, LoginDO, LoginDO>() {
+            new HttpAsyncTask<Void, LoginDO, LoginDO>() {
 
                 @Override
                 protected LoginDO doInBackground(Void... params) {

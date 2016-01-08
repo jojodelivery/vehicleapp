@@ -9,4 +9,5 @@ public class ErrorMessages {
     public static final String UNKNOWN_ERROR = "Unknown error occured. Please try again.";
     public static final String LOGIN_INCORRECT = "Login Failure. Check UserName/Password Incorrect";
     public static final String LOGIN_FAILURE = "Login Failure";
+    public static final String NO_DATA_TO_DISPLAY ="There are no orders to display";
 }
