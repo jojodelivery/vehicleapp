@@ -4,41 +4,31 @@ package com.pin91.jojovehicleapp.model;
  * Created by udit on 12/27/2015.
  */
 public class NotificationsCounter {
+    int todoOrderCount;
+    int pickupOrderCount;
+    int intransitOrderCount;
 
-    private int pickupPacketCount;
-    private int acceptPacketCount;
-    private int dropPacketCount;
-    private int messageCount;
-
-    public int getMessageCount() {
-        return messageCount;
+    public int getTodoOrderCount() {
+        return todoOrderCount;
     }
 
-    public void setMessageCount(int messageCount) {
-        this.messageCount = messageCount;
+    public void setTodoOrderCount(int todoOrderCount) {
+        this.todoOrderCount = todoOrderCount;
     }
 
-    public int getAcceptPacketCount() {
-        return acceptPacketCount;
+    public int getPickupOrderCount() {
+        return pickupOrderCount;
     }
 
-    public void setAcceptPacketCount(int acceptPacketCount) {
-        this.acceptPacketCount = acceptPacketCount;
+    public void setPickupOrderCount(int pickupOrderCount) {
+        this.pickupOrderCount = pickupOrderCount;
     }
 
-    public int getDropPacketCount() {
-        return dropPacketCount;
+    public int getIntransitOrderCount() {
+        return intransitOrderCount;
     }
 
-    public void setDropPacketCount(int dropPacketCount) {
-        this.dropPacketCount = dropPacketCount;
-    }
-
-    public int getPickupPacketCount() {
-        return pickupPacketCount;
-    }
-
-    public void setPickupPacketCount(int pickupPacketCount) {
-        this.pickupPacketCount = pickupPacketCount;
+    public void setIntransitOrderCount(int intransitOrderCount) {
+        this.intransitOrderCount = intransitOrderCount;
     }
 }

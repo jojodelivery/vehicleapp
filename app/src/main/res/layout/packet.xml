@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="PACKET ID : 124324324"
+        android:text=""
         android:padding="20dp"
         android:textSize="30sp" />
 
@@ -20,5 +20,5 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:padding="10dp"
-        android:text="This packet contains 1 kg gold" />
+        android:text="Loading.." />
 </LinearLayout>

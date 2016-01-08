@@ -62,7 +62,7 @@ public class SharedPreferenceManager {
     }
     public void saveVehicleId(int vehicleId){
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString(KEY_USERID, String.valueOf(vehicleId)).commit();
+        editor.putString(KEY_VEHICLE_ID, String.valueOf(vehicleId)).commit();
     }
 
     public String getRegId(){

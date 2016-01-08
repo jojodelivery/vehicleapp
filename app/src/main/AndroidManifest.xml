@@ -70,10 +70,14 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.AllocatedPacketActivity"
+            android:name=".activity.AssignedOrdersActivity"
             android:screenOrientation="portrait" >
         </activity>
 
+        <activity
+            android:name=".activity.InTransitVehicleActivity"
+            android:screenOrientation="portrait" >
+        </activity>
         <service
             android:name=".service.MessageReceivingService"
             android:label=".service.MessageReceivingService" >

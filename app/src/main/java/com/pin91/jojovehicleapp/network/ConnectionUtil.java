@@ -75,83 +75,45 @@ public class ConnectionUtil {
         }
     }
 
-    public final static boolean isValidEmail(CharSequence target) {
-        return !TextUtils.isEmpty(target)
-                && android.util.Patterns.EMAIL_ADDRESS.matcher(target)
-                .matches();
-    }
 
     public static String getResult(String url) {
         Log.d("Connection", url);
-        String failureReturnText = "";
-        NO_INTERNET_MESSAGE_SHOWN = "false";
-        if (isNetworkAvailable()) {
+        HttpClient httpclient = new DefaultHttpClient();
+        String line = "";
+        if (url.isEmpty())
+            url = servletUrl;
 
-            HttpClient httpclient = new DefaultHttpClient();
-            String line = "";
-            if (url.isEmpty())
-                url = servletUrl;
+        String connectionUrl = CONNECTION_BACKEND.concat("/").concat(url);
 
-            String connectionUrl = CONNECTION_BACKEND.concat("/").concat(url);
+        HttpPost httpPost = new HttpPost(connectionUrl);
 
-            HttpPost httpPost = new HttpPost(connectionUrl);
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 
-            String USER_AGENT = "Mozilla/5.0";
-
-            httpPost.setHeader("User-Agent", USER_AGENT);
-
-            List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-
-            if (paramsListMap != null)
-                for (Map.Entry<String, String> entry : paramsListMap.entrySet()) {
-                    urlParameters.add(new BasicNameValuePair(entry.getKey(),
-                            entry.getValue()));
-                }
-            try {
-                httpPost.setEntity(new UrlEncodedFormEntity(urlParameters));
-                HttpResponse response = httpclient.execute(httpPost);
-                if (response.getStatusLine().getStatusCode() != 404) {
-
-                    InputStream inputstream = response.getEntity().getContent();
-
-                    if (servletUrl.equalsIgnoreCase("saveTestAnswers")) {
-                        failureReturnText = "saved";
-                        return "saved";
-                    } else if (servletUrl
-                            .equalsIgnoreCase("UploadVideoInterviewServlet")) {
-                        failureReturnText = "saved";
-                        return "Saved";
-                    } else if (servletUrl.equalsIgnoreCase("jobApply")) {
-
-                        failureReturnText = "saved";
-                        return "Saved";
-                    }
-
-                    line = convertStreamToString(inputstream);
-                    return line;
-
-                }
-            } catch (ClientProtocolException e) {
-                /*
-				 * Toast.makeText(MainActivity.mContext,
-				 * "Caught ClientProtocolException", Toast.LENGTH_SHORT)
-				 * .show();
-				 */
-            } catch (IOException e) {
-                Toast.makeText(context,
-                        "No Internet.Check Your Connection.", Toast.LENGTH_LONG)
-                        .show();
-                NO_INTERNET_MESSAGE_SHOWN = "true";
-            } catch (Exception e) {
+        if (paramsListMap != null)
+            for (Map.Entry<String, String> entry : paramsListMap.entrySet()) {
+                urlParameters.add(new BasicNameValuePair(entry.getKey(),
+                        entry.getValue()));
             }
-        } else {
+        try {
+            httpPost.setEntity(new UrlEncodedFormEntity(urlParameters));
+            HttpResponse response = httpclient.execute(httpPost);
+            if (response.getStatusLine().getStatusCode() != 404) {
+
+                InputStream inputstream = response.getEntity().getContent();
+                line = convertStreamToString(inputstream);
+                return line;
+            }
+        } catch (ClientProtocolException e) {
+            Toast.makeText(context, "Unable to connect. " + e.getMessage(), Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
             Toast.makeText(context,
                     "No Internet.Check Your Connection.", Toast.LENGTH_LONG)
                     .show();
             NO_INTERNET_MESSAGE_SHOWN = "true";
-
+        } catch (Exception e) {
+            Toast.makeText(context, "Unable to connect. " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-        return failureReturnText;
+        return null;
     }
 
     public static boolean isNetworkAvailable() {

@@ -26,7 +26,7 @@ public class GetVehicleDetailsByContextRequest {
     public static VehicleBean getVehicleData(Context context, String userId) {
         Map<String, String> paramsMap = new HashMap<String, String>();
 
-        paramsMap.put(USER_ID, "28");
+        paramsMap.put(USER_ID, userId);
         String response = ConnectionUtil.connectToBackEnd(
                 paramsMap,REQUEST_SUB_URL);
 

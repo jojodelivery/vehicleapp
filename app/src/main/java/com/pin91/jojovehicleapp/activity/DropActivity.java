@@ -185,17 +185,7 @@ public class DropActivity extends Activity {
 				super.onPostExecute(finalNotificationList);
 			}
 
-			if (isErrorOccured) {
-				if (!ConnectionUtil.isNetworkAvailable())
-					Toast.makeText(
-							DropActivity.mContext,
-							"Check Your Internet Connection",
-							Toast.LENGTH_LONG).show();
-				else
-					Toast.makeText(DropActivity.mContext,
-							ConnectionUtil.CONNECTION_SERVER_DOWN_MESSAGE,
-							Toast.LENGTH_LONG).show();
-			} else if (finalNotificationList.size() == 0) {
+			if (finalNotificationList.size() == 0) {
 				notificationMessage.setText("No data to Show");
 				prevBtn.setVisibility(View.GONE);
 				nextBtn.setVisibility(View.GONE);

@@ -4,6 +4,9 @@
     android:layout_height="match_parent">
   <TextView
       android:layout_width="match_parent"
+      android:id="@+id/order_name"
+      android:text=""
+      android:textSize="40sp"
       android:layout_height="wrap_content" />
     <include
         android:id="@+id/order_packet_selection_card"

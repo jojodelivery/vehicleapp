@@ -3,15 +3,28 @@ package com.pin91.jojovehicleapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PacketTrackingBean {
+public class PacketTrackingBean implements Serializable{
 
 	private Integer packetTrackingId;
 	private Integer packetId;
 	private String packetName;
 	private String createdDate;
 	private String message;
+
+	public String getPacketCode() {
+		return packetCode;
+	}
+
+	public void setPacketCode(String packetCode) {
+		this.packetCode = packetCode;
+	}
+
 	private String status;
+	private String packetCode;
+
 
 	public Integer getPacketTrackingId() {
 		return packetTrackingId;

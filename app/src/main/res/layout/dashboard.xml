@@ -45,17 +45,17 @@
         custom:iconText="@string/transit_vehicle"
         custom:notificationTextSize="30" />
 
-    <com.pin91.jojovehicleapp.views.widgets.DashboardCell
-        android:id="@+id/pickup"
-        android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="1"
-        android:paddingLeft="20dp"
-        custom:cellTitle="DELIVERED"
-        custom:cellBackground="@color/dashboard_cell_blue"
-        custom:iconFontSize="80"
-        custom:iconText="@string/hand_over"
-        custom:notificationTextSize="30" />
+    <!--<com.pin91.jojovehicleapp.views.widgets.DashboardCell-->
+        <!--android:id="@+id/delivered"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dip"-->
+        <!--android:layout_marginBottom="5dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:paddingLeft="20dp"-->
+        <!--custom:cellTitle="DELIVERED"-->
+        <!--custom:cellBackground="@color/dashboard_cell_blue"-->
+        <!--custom:iconFontSize="80"-->
+        <!--custom:iconText="@string/hand_over"-->
+        <!--custom:notificationTextSize="30" />-->
 
 </LinearLayout>

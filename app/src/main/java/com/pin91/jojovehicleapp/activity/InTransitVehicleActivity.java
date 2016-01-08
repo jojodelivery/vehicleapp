@@ -11,17 +11,19 @@ import android.widget.TextView;
 
 import com.pin91.jojovehicleapp.R;
 import com.pin91.jojovehicleapp.model.OrderDO;
+import com.pin91.jojovehicleapp.model.PickupStatus;
+import com.pin91.jojovehicleapp.network.requests.GetInTransitOrderDetailsRequest;
 import com.pin91.jojovehicleapp.network.requests.GetPickupDetailsRequest;
 import com.pin91.jojovehicleapp.utils.SharedPreferenceManager;
 import com.pin91.jojovehicleapp.views.action.Pager;
 
 import java.util.List;
 
-public class PickUpActivity extends Activity {
+public class InTransitVehicleActivity extends Activity {
 
 
     Pager<OrderDO> orderList;
-
+    public static final String STATUS_TRANSIT = "IN_TRANSIT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,7 @@ public class PickUpActivity extends Activity {
             @Override
             protected List<OrderDO> doInBackground(Void... voids) {
                 SharedPreferenceManager preferenceManager = SharedPreferenceManager.getSharedPreferenceManager(getApplicationContext());
-                return GetPickupDetailsRequest.reloadData(preferenceManager.getVehicleId(), preferenceManager.getUserId());
+                return GetInTransitOrderDetailsRequest.reloadData(preferenceManager.getVehicleId(), preferenceManager.getUserId(), STATUS_TRANSIT);
             }
 
             @Override
@@ -58,6 +60,8 @@ public class PickUpActivity extends Activity {
                             setView(orderDO);
                         }
                     };
+                } else {
+
                 }
             }
         }.execute();
@@ -76,8 +80,10 @@ public class PickUpActivity extends Activity {
         detailOrderInfoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent orderPacketDetail = new Intent(PickUpActivity.this, OrderPacketDetailActivity.class);
+                Intent orderPacketDetail = new Intent(InTransitVehicleActivity.this, OrderPacketDetailActivity.class);
                 orderPacketDetail.putExtra(OrderPacketDetailActivity.ORDER, orderDO);
+                orderPacketDetail.putExtra(OrderPacketDetailActivity.PACKET_DELIVERY_STATUS,
+                        PickupStatus.STATUS.IN_TRANSIT.getValue());
                 startActivity(orderPacketDetail);
             }
         });
