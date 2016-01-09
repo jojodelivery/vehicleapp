@@ -11,7 +11,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.pin91.jojovehicleapp.R;
+import com.pin91.jojovehicleapp.builders.OrderLayoutBuilder;
 import com.pin91.jojovehicleapp.model.OrderDO;
+import com.pin91.jojovehicleapp.model.PickupStatus;
+import com.pin91.jojovehicleapp.network.ErrorMessages;
 import com.pin91.jojovehicleapp.network.requests.GetPickupDetailsRequest;
 import com.pin91.jojovehicleapp.utils.HttpAsyncTask;
 import com.pin91.jojovehicleapp.utils.SharedPreferenceManager;
@@ -44,6 +47,8 @@ public class PickUpActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(List<OrderDO> orderDOs) {
                 if(orderDOs != null){
+                    TextView progressIndicator = (TextView)findViewById(R.id.progressIndicator);
+                    progressIndicator.setVisibility(View.GONE);
                     orderList = new Pager<OrderDO>(getWindow().getDecorView().getRootView(), orderDOs) {
                         @Override
                         public void onLeftActionHandler(OrderDO orderDO) {
@@ -60,6 +65,9 @@ public class PickUpActivity extends AppCompatActivity {
                             setView(orderDO);
                         }
                     };
+                } else {
+                    TextView progressIndicator = (TextView)findViewById(R.id.progressIndicator);
+                    progressIndicator.setText(ErrorMessages.NO_DATA_TO_DISPLAY);
                 }
             }
         }.execute();
@@ -67,26 +75,43 @@ public class PickUpActivity extends AppCompatActivity {
 
 
     private void setView(final OrderDO orderDO){
-        TextView distributorName = (TextView)findViewById(R.id.distributorName);
-        TextView distributorAddress = (TextView)findViewById(R.id.distributorAddress);
-        TextView orderName = (TextView)findViewById(R.id.orderName);
-        distributorName.setText(orderDO.getDistributor());
-        distributorAddress.setText(orderDO.getDestinationAddress());
-        orderName.setText(orderDO.getOrderName());
+//        TextView distributorName = (TextView)findViewById(R.id.distributorName);
+//        TextView distributorAddress = (TextView)findViewById(R.id.distributorAddress);
+//        TextView orderName = (TextView)findViewById(R.id.orderName);
+//        distributorName.setText(orderDO.getDistributor());
+//        distributorAddress.setText(orderDO.getDestinationAddress());
+//        orderName.setText(orderDO.getOrderName());
+//
+//        Button detailOrderInfoBtn = (Button)findViewById(R.id.detailOrderInfoButton);
+//        detailOrderInfoBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent orderPacketDetail = new Intent(PickUpActivity.this, OrderPacketDetailActivity.class);
+//                orderPacketDetail.putExtra(OrderPacketDetailActivity.ORDER, orderDO);
+//                startActivity(orderPacketDetail);
+//            }
+//        });
 
-        Button detailOrderInfoBtn = (Button)findViewById(R.id.detailOrderInfoButton);
-        detailOrderInfoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent orderPacketDetail = new Intent(PickUpActivity.this, OrderPacketDetailActivity.class);
-                orderPacketDetail.putExtra(OrderPacketDetailActivity.ORDER, orderDO);
-                startActivity(orderPacketDetail);
-            }
-        });
+
+        OrderLayoutBuilder.getInstance().
+                buildOrderLayout(getWindow().getDecorView().getRootView(), orderDO, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent orderPacketDetail = new Intent(PickUpActivity.this, OrderPacketDetailActivity.class);
+                        orderPacketDetail.putExtra(OrderPacketDetailActivity.ORDER, orderDO);
+                        startActivity(orderPacketDetail);
+                    }
+                });
     }
 
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reloadData();
     }
 }

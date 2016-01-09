@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.pin91.jojovehicleapp.R;
+import com.pin91.jojovehicleapp.builders.OrderLayoutBuilder;
 import com.pin91.jojovehicleapp.model.OrderDO;
 import com.pin91.jojovehicleapp.model.PickupStatus;
 import com.pin91.jojovehicleapp.network.ErrorMessages;
@@ -74,28 +75,42 @@ public class InTransitVehicleActivity extends AppCompatActivity {
 
 
     private void setView(final OrderDO orderDO){
-        TextView distributorName = (TextView)findViewById(R.id.distributorName);
-        TextView distributorAddress = (TextView)findViewById(R.id.distributorAddress);
-        TextView orderName = (TextView)findViewById(R.id.orderName);
-        distributorName.setText(orderDO.getDistributor());
-        distributorAddress.setText(orderDO.getDestinationAddress());
-        orderName.setText(orderDO.getOrderName());
+//        TextView distributorName = (TextView)findViewById(R.id.distributorName);
+//        TextView distributorAddress = (TextView)findViewById(R.id.distributorAddress);
+//        TextView orderName = (TextView)findViewById(R.id.orderName);
+//        distributorName.setText(orderDO.getDistributor());
+//        distributorAddress.setText(orderDO.getDestinationAddress());
+//        orderName.setText(orderDO.getOrderName());
+//
+//        Button detailOrderInfoBtn = (Button)findViewById(R.id.detailOrderInfoButton);
+//        detailOrderInfoBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
 
-        Button detailOrderInfoBtn = (Button)findViewById(R.id.detailOrderInfoButton);
-        detailOrderInfoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent orderPacketDetail = new Intent(InTransitVehicleActivity.this, OrderPacketDetailActivity.class);
-                orderPacketDetail.putExtra(OrderPacketDetailActivity.ORDER, orderDO);
-                orderPacketDetail.putExtra(OrderPacketDetailActivity.PACKET_DELIVERY_STATUS,
-                        PickupStatus.STATUS.IN_TRANSIT.getValue());
-                startActivity(orderPacketDetail);
-            }
-        });
+        OrderLayoutBuilder.getInstance().
+                buildOrderLayout(getWindow().getDecorView().getRootView(), orderDO, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent orderPacketDetail = new Intent(InTransitVehicleActivity.this, OrderPacketDetailActivity.class);
+                        orderPacketDetail.putExtra(OrderPacketDetailActivity.ORDER, orderDO);
+                        orderPacketDetail.putExtra(OrderPacketDetailActivity.PACKET_DELIVERY_STATUS,
+                                PickupStatus.STATUS.IN_TRANSIT.getValue());
+                        startActivity(orderPacketDetail);
+                    }
+                });
     }
 
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reloadData();
     }
 }

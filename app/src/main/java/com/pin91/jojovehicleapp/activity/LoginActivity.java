@@ -121,9 +121,9 @@ public class LoginActivity extends Activity {
         if (TextUtils.isEmpty(regId)) {
             registerInBackground();
         } else {
-            Toast.makeText(getApplicationContext(),
-                    "RegId already available. RegId: " + regId,
-                    Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(),
+//                    "RegId already available. RegId: " + regId,
+//                    Toast.LENGTH_LONG).show();
         }
         return regId;
     }
@@ -132,30 +132,6 @@ public class LoginActivity extends Activity {
     @SuppressWarnings("unchecked")
     private void registerInBackground() {
         SaveGCMKeyRequest.registerInBackground(getApplicationContext());
-//        new AsyncTask() {
-//            @Override
-//            protected Object doInBackground(Object... params) {
-//                try {
-//                    if (gcm == null) {
-//                        gcm = GoogleCloudMessaging.getInstance(mContext);
-//                    }
-//                    regId = gcm.register("1078992195391");
-//                    Map<String, String> gcmParam = new HashMap<String, String>();
-//
-//                    gcmParam.put("userId", sharedpreferences.getString("userId",
-//                            ""));
-//                    gcmParam.put("key", regId);
-//                    ConnectionUtil.connectToBackEnd(gcmParam, "app/saveGCMKey");
-//                    Editor editor = sharedpreferences.edit();
-//                    editor.putString(REG_ID, regId);
-//                    editor.commit();
-//                } catch (IOException ex) {
-//                    Log.d("Error", "Error: " + ex.getMessage());
-//                }
-//                return "";
-//            }
-//
-//        }.execute(null, null, null);
     }
 
     private String getRegistrationId(Context context) {

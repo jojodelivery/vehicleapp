@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
@@ -63,8 +64,8 @@ public class OrderPacketDetailActivity extends AppCompatActivity {
     private void setView(PacketTrackingBean packetTrackingBean){
         TextView packetText =  (TextView)findViewById(R.id.packet_text);
         TextView packetDistributionText =  (TextView)findViewById(R.id.packet_description);
-        packetText.setText(packetTrackingBean.getPacketName());
-        packetDistributionText.setText(packetTrackingBean.getMessage());
+        packetText.setText(packetTrackingBean.getPacketCode());
+        packetDistributionText.setText(Html.fromHtml(packetTrackingBean.getMessage()));
         acceptRejectPanel = new SelectionPanel<PacketTrackingBean>(getWindow().getDecorView().getRootView(), packetTrackingBean) {
             @Override
             public void onAcceptClick(PacketTrackingBean bean) {

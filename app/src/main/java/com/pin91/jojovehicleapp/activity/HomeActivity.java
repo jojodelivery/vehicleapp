@@ -149,4 +149,9 @@ public class HomeActivity extends AppCompatActivity {
         inVehiclePackets.setNotificationCircleText(counter.getIntransitOrderCount());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        renderNotificationCount();
+    }
 }

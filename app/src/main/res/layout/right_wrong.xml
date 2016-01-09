@@ -9,7 +9,7 @@
         android:id="@+id/rejectBtn"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:text="@string/right_icon"
+        android:text="@string/wrong_icon"
         android:padding="15dp"
         android:gravity="center"
         android:textSize="60sp"
@@ -20,7 +20,7 @@
         android:layout_width="0dip"
         android:padding="15dp"
         android:layout_height="wrap_content"
-        android:text="@string/wrong_icon"
+        android:text="@string/right_icon"
         android:textSize="60sp"
         android:gravity="center"
         android:layout_weight="1" />
