@@ -44,8 +44,13 @@ public abstract class SelectionPanel<T extends Object> {
         });
     }
 
-    public void disablePanel(){
-        acceptBtn.setEnabled(false);
-        rejectBtn.setEnabled(false);
+    public void enableDisablePanel(boolean isEnabled){
+        acceptBtn.setEnabled(isEnabled);
+        rejectBtn.setEnabled(isEnabled);
+    }
+
+    public void makePanelDisappear(){
+        acceptBtn.setVisibility(View.GONE);
+        rejectBtn.setVisibility(View.GONE);
     }
 }

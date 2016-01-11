@@ -64,7 +64,7 @@ public class LoginActivity extends Activity {
                 setContentView(R.layout.login);
                 addListener();
                 setUserCredentials();
-                Toast.makeText(getApplicationContext(), ErrorMessages.UNABLE_TO_CONNECT, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), ErrorMessages.UNABLE_TO_CONNECT, Toast.LENGTH_SHORT).show();
             }
         } else {
             setContentView(R.layout.login);
@@ -83,7 +83,7 @@ public class LoginActivity extends Activity {
         }
 
         if (isUserInputValid()) {
-            new HttpAsyncTask<Void, LoginDO, LoginDO>() {
+            new HttpAsyncTask<Void, LoginDO, LoginDO>(getApplicationContext()) {
 
                 @Override
                 protected LoginDO doInBackground(Void... params) {
@@ -92,27 +92,33 @@ public class LoginActivity extends Activity {
 
                 @Override
                 protected void onPostExecute(LoginDO loginDO) {
-                    if (loginDO != null) {
-                        DTSCommonUtil.closeProgressBar();
-                        userId = loginDO.getUserId();
-                        User user = new User();
-                        user.setUserName(getUserNameText());
-                        user.setPassword(getPasswordText());
-                        MySQLiteHelper.insertUser(user, getApplicationContext());
-                        SharedPreferenceManager preferenceManager = SharedPreferenceManager.getSharedPreferenceManager(getApplicationContext());
-                        preferenceManager.saveUserName(getUserNameText());
-                        preferenceManager.savePassword(getPasswordText());
-                        preferenceManager.saveUserId(loginDO.getUserId());
-                        registerGCM();
-                        Intent dashboardIntent = new Intent(
-                                LoginActivity.this, HomeActivity.class);
-                        startActivity(dashboardIntent);
+                    super.onPostExecute(loginDO);
+                    if(loginDO != null){
+                        if (loginDO.isSuccess()) {
+                            userId = loginDO.getUserId();
+                            User user = new User();
+                            user.setUserName(getUserNameText());
+                            user.setPassword(getPasswordText());
+                            MySQLiteHelper.insertUser(user, getApplicationContext());
+                            SharedPreferenceManager preferenceManager = SharedPreferenceManager.getSharedPreferenceManager(getApplicationContext());
+                            preferenceManager.saveUserName(getUserNameText());
+                            preferenceManager.savePassword(getPasswordText());
+                            preferenceManager.saveUserId(loginDO.getUserId());
+                            registerGCM();
+                            Intent dashboardIntent = new Intent(
+                                    LoginActivity.this, HomeActivity.class);
+                            startActivity(dashboardIntent);
+                        } else {
+                            Toast.makeText(getApplicationContext(), ErrorMessages.LOGIN_FAILURE,
+                                    Toast.LENGTH_LONG).show();
+                            setContentView(R.layout.login);
+                            addListener();
+                            setUserCredentials();
+                        }
                     }
-                    DTSCommonUtil.closeProgressBar();
                 }
             }.execute();
         } else {
-            DTSCommonUtil.closeProgressBar();
         }
     }
 
@@ -120,10 +126,6 @@ public class LoginActivity extends Activity {
         String regId = getRegistrationId(getApplicationContext());
         if (TextUtils.isEmpty(regId)) {
             registerInBackground();
-        } else {
-//            Toast.makeText(getApplicationContext(),
-//                    "RegId already available. RegId: " + regId,
-//                    Toast.LENGTH_LONG).show();
         }
         return regId;
     }
@@ -178,7 +180,7 @@ public class LoginActivity extends Activity {
 
     public void autoLogin() {
        // DTSCommonUtil.showProgressBar(this);
-        new AsyncTask<Void, LoginDO, LoginDO>(){
+        new HttpAsyncTask<Void, LoginDO, LoginDO>(getApplicationContext()){
             @Override
             protected LoginDO doInBackground(Void... params) {
                 return LoginRequest.loginUser(getApplicationContext(), user.getUserName(), user.getPassword());
@@ -186,26 +188,21 @@ public class LoginActivity extends Activity {
 
             @Override
             protected void onPostExecute(LoginDO loginDO) {
-                DTSCommonUtil.closeProgressBar();
-                if (loginDO == null) {
-                    setContentView(R.layout.login);
-                    addListener();
-                    setUserCredentials();
-                } else if (loginDO.isSuccess()) {
-                    userId = loginDO.getUserId();
-                    SharedPreferenceManager preferenceManager = SharedPreferenceManager.getSharedPreferenceManager(getApplicationContext());
-                    preferenceManager.saveUserId(loginDO.getUserId());
-                    preferenceManager.savePassword(user.getPassword());
-                    preferenceManager.saveUserName(user.getUserName());
-                    Intent dashboardIntent = new Intent(
-                            LoginActivity.this, HomeActivity.class);
-                    startActivity(dashboardIntent);
-                } else {
-                    Toast.makeText(LoginActivity.this, ErrorMessages.LOGIN_FAILURE,
-                            Toast.LENGTH_LONG).show();
-                    setContentView(R.layout.login);
-                    addListener();
-                    setUserCredentials();
+                super.onPostExecute(loginDO);
+                if (loginDO != null) {
+                    if (loginDO.isSuccess()) {
+                        userId = loginDO.getUserId();
+                        SharedPreferenceManager preferenceManager = SharedPreferenceManager.getSharedPreferenceManager(getApplicationContext());
+                        preferenceManager.saveUserId(loginDO.getUserId());
+                        preferenceManager.savePassword(user.getPassword());
+                        preferenceManager.saveUserName(user.getUserName());
+                        Intent dashboardIntent = new Intent(
+                                LoginActivity.this, HomeActivity.class);
+                        startActivity(dashboardIntent);
+                    } else {
+                        Toast.makeText(getApplicationContext(), ErrorMessages.LOGIN_FAILURE,
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         }.execute();
@@ -214,10 +211,10 @@ public class LoginActivity extends Activity {
     public void setUserCredentials() {
         TextView userName = (TextView) findViewById(R.id.usernameId);
         TextView password = (TextView) findViewById(R.id.passwordId);
-
-        userName.setText(user.getUserName());
-        password.setText(user.getPassword());
-
+        if(user != null){
+            userName.setText(user.getUserName());
+            password.setText(user.getPassword());
+        }
     }
 
     private boolean isUserInputValid() {
@@ -225,13 +222,13 @@ public class LoginActivity extends Activity {
         String passwordText = getPasswordText();
         if (JojoUtils.isNullOrEmpty(usernameText)) {
             DTSCommonUtil.closeProgressBar();
-            Toast.makeText(LoginActivity.this, "Enter UserName",
+            Toast.makeText(getApplicationContext(), "Enter UserName",
                     Toast.LENGTH_SHORT).show();
             return false;
         }
         if (JojoUtils.isNullOrEmpty(passwordText)) {
             DTSCommonUtil.closeProgressBar();
-            Toast.makeText(LoginActivity.this, "Enter Password",
+            Toast.makeText(getApplicationContext(), "Enter Password",
                     Toast.LENGTH_SHORT).show();
             return false;
         }

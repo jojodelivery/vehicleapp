@@ -44,7 +44,8 @@ public class PickupStatus {
     public enum STATUS {
         ACCEPT("ACCEPT"),
         REJECT("REJECT"),
-        IN_TRANSIT("IN_TRANSIT");
+        IN_TRANSIT("IN_TRANSIT"),
+        PENDING("PENDING");
 
         private String status;
 

@@ -2,11 +2,9 @@ package com.pin91.jojovehicleapp.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.view.View;
 import android.widget.TextView;
 
 import com.pin91.jojovehicleapp.R;
@@ -14,6 +12,7 @@ import com.pin91.jojovehicleapp.model.OrderDO;
 import com.pin91.jojovehicleapp.model.PacketTrackingBean;
 import com.pin91.jojovehicleapp.model.PickupStatus;
 import com.pin91.jojovehicleapp.network.requests.UpdateVehiclePickUpRequest;
+import com.pin91.jojovehicleapp.utils.HttpAsyncTask;
 import com.pin91.jojovehicleapp.utils.SharedPreferenceManager;
 import com.pin91.jojovehicleapp.views.action.Pager;
 import com.pin91.jojovehicleapp.views.action.SelectionPanel;
@@ -58,36 +57,66 @@ public class OrderPacketDetailActivity extends AppCompatActivity {
            public void initialView(PacketTrackingBean packetTrackingBean) {
                setView(packetTrackingBean);
            }
+
+           @Override
+           public void onDeleteEmpty() {
+               setView(null);
+               acceptRejectPanel.makePanelDisappear();
+           }
        };
     }
 
     private void setView(PacketTrackingBean packetTrackingBean){
         TextView packetText =  (TextView)findViewById(R.id.packet_text);
         TextView packetDistributionText =  (TextView)findViewById(R.id.packet_description);
-        packetText.setText(packetTrackingBean.getPacketCode());
-        packetDistributionText.setText(Html.fromHtml(packetTrackingBean.getMessage()));
-        acceptRejectPanel = new SelectionPanel<PacketTrackingBean>(getWindow().getDecorView().getRootView(), packetTrackingBean) {
-            @Override
-            public void onAcceptClick(PacketTrackingBean bean) {
-                acceptClick(bean);
-            }
+        if(packetTrackingBean != null){
+            packetText.setText(packetTrackingBean.getPacketCode());
+            packetDistributionText.setText(Html.fromHtml(packetTrackingBean.getMessage()));
+            acceptRejectPanel = new SelectionPanel<PacketTrackingBean>(getWindow().getDecorView().getRootView(), packetTrackingBean) {
+                @Override
+                public void onAcceptClick(PacketTrackingBean bean) {
+                    acceptClick(bean);
+                }
 
-            @Override
-            public void onRejectClick(PacketTrackingBean bean) {
-                rejectClick(bean);
-            }
-        };
+                @Override
+                public void onRejectClick(PacketTrackingBean bean) {
+                    rejectClick(bean);
+                }
+            };
+        } else {
+            packetText.setText("");
+            packetDistributionText.setText("No more entries to display");
+        }
     }
 
-    public void acceptClick(PacketTrackingBean bean) {
-        PickupStatus pickupStatus =
-                getPickupStatusObject(packetDeliveryStatus, bean.getPacketId(), bean.getPacketTrackingId());
-        UpdateVehiclePickUpRequest.updateVehiclePickupStatus(pickupStatus);
+    public void acceptClick(final PacketTrackingBean bean) {
+        new HttpAsyncTask<Void, String, String>(getApplicationContext()){
+
+            @Override
+            protected String doInBackground(Void... params) {
+                PickupStatus pickupStatus =
+                        getPickupStatusObject(packetDeliveryStatus, bean.getPacketId(), bean.getPacketTrackingId());
+                return UpdateVehiclePickUpRequest.updateVehiclePickupStatus(pickupStatus);
+            }
+
+            @Override
+            protected void onPostExecute(String response) {
+                super.onPostExecute(response);
+                if(response != null){
+                    bean.setStatus(packetDeliveryStatus);
+                    showAlertDialog("Data has been saved.");
+                    pager.deleteEntry(bean);
+                }
+            }
+        }.execute();
+    }
+
+    private void showAlertDialog(String message){
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 OrderPacketDetailActivity.this);
         builder.setTitle("Alert");
         builder.setMessage(
-                "Data has been saved.")
+                message)
                 .setCancelable(false)
                 .setPositiveButton(
                         "OK",
@@ -96,37 +125,35 @@ public class OrderPacketDetailActivity extends AppCompatActivity {
                                     DialogInterface dialog,
                                     int id) {
                                 dialog.cancel();
-                                acceptRejectPanel.disablePanel();
-                               // reloadData();
+                                //acceptRejectPanel.enableDisablePanel();
+                                // reloadData();
                             }
                         });
         AlertDialog alert = builder.create();
         alert.show();
     }
+    public void rejectClick(final PacketTrackingBean bean) {
 
-    public void rejectClick(PacketTrackingBean bean) {
-        PickupStatus pickupStatus =
-                getPickupStatusObject(PickupStatus.STATUS.REJECT.getValue(), bean.getPacketId(), bean.getPacketTrackingId());
-        UpdateVehiclePickUpRequest.updateVehiclePickupStatus(pickupStatus);
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                OrderPacketDetailActivity.this);
-        builder.setTitle("Alert");
-        builder.setMessage(
-                "You have rejected the packet.")
-                .setCancelable(false)
-                .setPositiveButton(
-                        "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(
-                                    DialogInterface dialog,
-                                    int id) {
-                                dialog.cancel();
-                                acceptRejectPanel.disablePanel();
-                              //  reloadData();
-                            }
-                        });
-        AlertDialog alert = builder.create();
-        alert.show();
+        new HttpAsyncTask<Void, String, String>(getApplicationContext()){
+
+            @Override
+            protected String doInBackground(Void... params) {
+                PickupStatus pickupStatus =
+                        getPickupStatusObject(PickupStatus.STATUS.REJECT.getValue(), bean.getPacketId(), bean.getPacketTrackingId());
+                return UpdateVehiclePickUpRequest.updateVehiclePickupStatus(pickupStatus);
+            }
+
+            @Override
+            protected void onPostExecute(String response) {
+                super.onPostExecute(response);
+                if(response != null){
+                    bean.setStatus(PickupStatus.STATUS.REJECT.getValue());
+                    showAlertDialog("You have rejected the packet");
+                    pager.deleteEntry(bean);
+                }
+
+            }
+        }.execute();
     }
 
 

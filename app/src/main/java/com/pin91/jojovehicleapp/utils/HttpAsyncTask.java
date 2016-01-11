@@ -14,6 +14,9 @@ public abstract class HttpAsyncTask<Params, Progress, Result> extends AsyncTask<
 
     public Context context;
 
+    public HttpAsyncTask(Context context){
+        this.context = context;
+    }
     @Override
     protected void onPostExecute(Result o) {
         if(o == null){

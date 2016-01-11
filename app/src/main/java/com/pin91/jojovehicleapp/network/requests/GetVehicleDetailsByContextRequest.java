@@ -31,7 +31,6 @@ public class GetVehicleDetailsByContextRequest {
                 paramsMap,REQUEST_SUB_URL);
 
         if (response == null || response == "") {
-            Toast.makeText(context, ConnectionUtil.CONNECTION_SERVER_DOWN_MESSAGE, Toast.LENGTH_LONG).show();
             return null;
         }
 

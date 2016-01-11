@@ -24,6 +24,7 @@ abstract public class Pager<T extends Object> {
     public abstract void onLeftActionHandler(T object);
     public abstract void onRightActionHandler(T object);
     public abstract void initialView(T object);
+    public abstract void onDeleteEmpty();
 
     public Pager(View rootView, List<T> models){
         leftAction = (TextView)rootView.findViewById(R.id.previous_arrow);
@@ -49,23 +50,44 @@ abstract public class Pager<T extends Object> {
         leftAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(currentCount>0){
+                if(currentCount>0) {
                     currentCount--;
+                }
                     onLeftActionHandler(models.get(currentCount));
                     displayCounter();
                 }
-            }
+
         });
 
         rightAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(currentCount < models.size()-1){
+                if (currentCount < models.size() - 1) {
                     currentCount++;
+                }
                     onRightActionHandler(models.get(currentCount));
                     displayCounter();
                 }
-            }
         });
+    }
+
+    public void deleteEntry(T model){
+        models.remove(model);
+        if(models.size() > 0){
+            if(currentCount < models.size()){
+                rightAction.performClick();
+            } else if(currentCount == models.size()){
+                leftAction.performClick();
+            }
+        } else {
+            makePagerInvisible();
+            onDeleteEmpty();
+        }
+    }
+
+    public void makePagerInvisible(){
+        leftAction.setVisibility(View.GONE);
+        rightAction.setVisibility(View.GONE);
+        currentPosition.setVisibility(View.GONE);
     }
 }

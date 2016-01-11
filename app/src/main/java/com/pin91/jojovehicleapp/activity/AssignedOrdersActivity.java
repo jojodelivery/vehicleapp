@@ -29,10 +29,6 @@ import com.pin91.jojovehicleapp.views.action.Pager;
 
 public class AssignedOrdersActivity extends AppCompatActivity {
 
-
-	TextView textView;
-	ImageView acceptBtn;
-	ImageView rejectBtn;
 	int packetTrackingId;
 	int packetId;
 	Pager pager;
@@ -106,8 +102,7 @@ public class AssignedOrdersActivity extends AppCompatActivity {
     }
 
 	private void reloadData() {
-        new HttpAsyncTask<Void, ArrayList<OrderDO>, ArrayList<OrderDO>>(){
-
+        new HttpAsyncTask<Void, ArrayList<OrderDO>, ArrayList<OrderDO>>(getApplicationContext()){
             @Override
             protected ArrayList<OrderDO> doInBackground(Void... params) {
                 SharedPreferenceManager preferenceManager =
@@ -117,6 +112,7 @@ public class AssignedOrdersActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(ArrayList<OrderDO> assignedOrders) {
+                super.onPostExecute(assignedOrders);
                 if (assignedOrders == null) {
                    // showPacketStatusView(View.GONE, getString(R.string.empty_display));
                     TextView progressIndicator = (TextView)findViewById(R.id.progressIndicator);
@@ -147,6 +143,11 @@ public class AssignedOrdersActivity extends AppCompatActivity {
             public void initialView(OrderDO orderDO) {
                 setView(orderDO);
             }
+
+            @Override
+            public void onDeleteEmpty() {
+                //TODO
+            }
         };
 	}
 
@@ -163,24 +164,16 @@ public class AssignedOrdersActivity extends AppCompatActivity {
                         startActivity(orderPacketDetail);
                     }
                 });
-//        TextView distributorName = (TextView)findViewById(R.id.distributorName);
-//        TextView distributorAddress = (TextView)findViewById(R.id.distributorAddress);
-//        TextView orderName = (TextView)findViewById(R.id.orderName);
-//        distributorName.setText(orderDO.getDistributor());
-//        distributorAddress.setText(orderDO.getDestinationAddress());
-//        orderName.setText(orderDO.getOrderName());
-//
-//        Button detailOrderInfoBtn = (Button)findViewById(R.id.detailOrderInfoButton);
-//        detailOrderInfoBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
     }
 
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        reloadData();
+        super.onResume();
     }
 }

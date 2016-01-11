@@ -187,11 +187,11 @@ public class NotificationActivity extends Activity {
 			if (isErrorOccured) {
 				if (!ConnectionUtil.isNetworkAvailable())
 					Toast.makeText(
-							NotificationActivity.mContext,
+							getApplicationContext(),
 							"Check Your Internet Connection",
 							Toast.LENGTH_LONG).show();
 				else
-					Toast.makeText(NotificationActivity.mContext,
+					Toast.makeText(getApplicationContext(),
 							ConnectionUtil.CONNECTION_SERVER_DOWN_MESSAGE,
 							Toast.LENGTH_LONG).show();
 			} else if (finalNotificationList.size() == 0) {

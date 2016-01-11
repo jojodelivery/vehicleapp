@@ -124,7 +124,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void renderNotificationCount(){
-        new HttpAsyncTask<Void, NotificationsCounter, NotificationsCounter>(){
+        new HttpAsyncTask<Void, NotificationsCounter, NotificationsCounter>(getApplicationContext()){
 
 
             @Override
@@ -136,6 +136,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             protected void onPostExecute(NotificationsCounter notificationsCounter) {
+                super.onPostExecute(notificationsCounter);
                 if(notificationsCounter != null) {
                     setNotificationCount(notificationsCounter);
                 }

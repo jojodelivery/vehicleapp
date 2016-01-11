@@ -33,21 +33,12 @@ public class LoginRequest {
                 paramsMap, REQUEST_SUB_URL);
 
         if (response == null || response == "") {
-            Toast.makeText(context, ErrorMessages.UNKNOWN_ERROR, Toast.LENGTH_LONG).show();
             return null;
         }
-        LoginDO loginDO = null;
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            loginDO = objectMapper.readValue(response,
+            return objectMapper.readValue(response,
                     LoginDO.class);
-
-            if (loginDO.isSuccess() == true) {
-                return loginDO;
-            } else {
-                Toast.makeText(context, ErrorMessages.LOGIN_INCORRECT, Toast.LENGTH_LONG).show();
-                return null;
-            }
         } catch (JsonParseException e) {
             e.printStackTrace();
         } catch (JsonMappingException e) {
