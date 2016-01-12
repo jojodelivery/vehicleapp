@@ -34,7 +34,7 @@ public class OrderLayoutBuilder {
         TextView distributorName = (TextView)rootView.findViewById(R.id.distributorName);
         TextView distributorAddress = (TextView)rootView.findViewById(R.id.distributorAddress);
         TextView orderName = (TextView)rootView.findViewById(R.id.orderName);
-        distributorName.setText(orderDO.getDistributor());
+        distributorName.setText(orderDO.getRetailer());
         distributorAddress.setText(orderDO.getDestinationAddress());
         orderName.setText(orderDO.getOrderName());
         distributorAddress.setMovementMethod(new ScrollingMovementMethod());

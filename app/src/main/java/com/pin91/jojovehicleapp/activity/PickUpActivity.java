@@ -87,6 +87,8 @@ public class PickUpActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent orderPacketDetail = new Intent(PickUpActivity.this, OrderPacketDetailActivity.class);
                         orderPacketDetail.putExtra(OrderPacketDetailActivity.ORDER, orderDO);
+                        orderPacketDetail.putExtra(OrderPacketDetailActivity.PACKET_DELIVERY_STATUS,
+                                PickupStatus.STATUS.IN_TRANSIT.getValue());
                         startActivity(orderPacketDetail);
                     }
                 });

@@ -87,6 +87,9 @@ public class OrderPacketDetailActivity extends AppCompatActivity {
             packetText.setText("");
             packetDistributionText.setText("No more entries to display");
         }
+        if(packetDeliveryStatus == null || packetDeliveryStatus.isEmpty()){
+            acceptRejectPanel.makePanelDisappear();
+        }
     }
 
     public void acceptClick(final PacketTrackingBean bean) {
